@@ -9,8 +9,12 @@ import { middleware } from "./middleware/auth";
 import { random } from "lodash";
 app.use(express.json());
 app.use(cors());
-app.use(express.json());
 
+// declare module 'express' {
+//   interface Request {
+//     userId?: string;
+//   }
+// }
 app.post("/api/v1/signup", async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
@@ -19,7 +23,9 @@ app.post("/api/v1/signup", async (req, res) => {
             name: username,
             password: password
         });
-    }
+        res.json({
+            message: "User created successfully"                
+    })}
     catch (error) {
         res.status(411).json({ message: "user already exists" });
     }
@@ -30,7 +36,7 @@ app.post("/api/v1/signin", async (req, res) => {
     const password = req.body.password;
 
     const existingUser = await UserModel.findOne({
-        username,
+       name: username,
         password
     })
     if (existingUser) {
@@ -52,10 +58,12 @@ app.post("/api/v1/signin", async (req, res) => {
 app.post("/api/v1/content",middleware, async (req, res) => {
     const link = req.body.link;
     const type = req.body.type;
+    
     await ContentModel.create({
         link,
         type,
         title: req.body.title,
+      
         userId: req.userId,
         tags: []
     })
@@ -64,6 +72,7 @@ app.post("/api/v1/content",middleware, async (req, res) => {
     })
 })
     app.get("/api/v1/content",middleware, async (req, res) => {
+      
         const userId = req.userId;
         const content = await ContentModel.find({ userId: userId }).populate("userId", "username")
         res.json({ content });
@@ -73,6 +82,7 @@ app.post("/api/v1/content",middleware, async (req, res) => {
         const contentId = req.body.contentId;
         await ContentModel.deleteMany({
             _id: contentId,
+          
             userId: req.userId
         })
         res.json({ message: "Content deleted successfully" });
@@ -81,6 +91,7 @@ app.post("/api/v1/content",middleware, async (req, res) => {
     app.post("/api/v1/brain/share",middleware, async (req, res) => {
         const share = req.body.share;
         if (share) {
+            //@ts-ignore
             const existingLink = await LinkModel.findOne({ userId: req.userId });
             if (existingLink) {
                 res.json({
@@ -90,6 +101,7 @@ app.post("/api/v1/content",middleware, async (req, res) => {
             }
             const hash = random(10);
             await LinkModel.create({
+                //@ts-ignore
                 userId: req.userId,
                 hash: hash
             })
@@ -97,6 +109,7 @@ app.post("/api/v1/content",middleware, async (req, res) => {
                 hash
             })
         } else {
+            //@ts-ignore
             await LinkModel.deleteMany({ userId: req.userId });
             res.json({
                 message: "Share disabled"
@@ -133,3 +146,8 @@ app.post("/api/v1/content",middleware, async (req, res) => {
             content: content
         })
     })
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

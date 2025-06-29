@@ -1,10 +1,21 @@
 import mongoose, {Schema, model} from 'mongoose';
 import dotenv from 'dotenv';
-if (!process.env.MongoDB_URL) {
+dotenv.config();
+interface IUser {
+  name: string;
+  password: string;
+}
+if (!process.env.DATABASE_URL) {
   throw new Error("MongoDB_URL environment variable is missing!");
 }
-mongoose.connect(process.env.MongoDB_URL);
+mongoose.connect(process.env.DATABASE_URL);
+mongoose.connection.on('connected', () => {
+  console.log('MongoDB connected!');
+});
 
+mongoose.connection.on('error', (err) => {
+  console.error('MongoDB connection error:', err);
+});
 const UserSchema = new Schema({
     name:{type:String,required:true},
     password:{type:String,required:true},
