@@ -1,0 +1,1 @@
+MindStack frontend code written in React and typescript . It is a second brain app , in which we can add links(youtube link,tweets) , documents and more which we want to refer later .   
