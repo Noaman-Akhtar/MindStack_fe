@@ -12,6 +12,7 @@ function App() {
 
   return (
     <>
+    <div className='min-h-screen bg-[#0F0F1A]'>
     <CreateContentModal open={modalOpen} onClose={()=>{
       setModalOpen(false);
     }} />
@@ -26,7 +27,7 @@ function App() {
     <Card type='youtube' text='wtf pod' link='https://www.youtube.com/watch?v=O7O204wD82s'/>
     </div>
   
-
+</div>
     </>
   )
 }
