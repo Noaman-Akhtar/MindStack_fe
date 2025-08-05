@@ -9,19 +9,19 @@ interface ButtonProps { //things that the button component will contain
     onClick?: () => void;
 }
 const variantStyles = { // different styles or commands for a specific prop 
-    "primary": "bg-[#C88DF3] text-[#0F0F1A]",
+    "primary": "bg-[#d4bbff] text-[#0F0F1A]",
     "secondary": "bg-[#2D2B55] text-[#C4C2FF]"
 }
 const sizeStyles = {
     "sm": "py-1 px-2",
-    "md": "p-4",
+    "md": "py-3 px-3",
     "lg": "p-6"
 }
 
 const defaultStyles = "rounded-md flex px-2"// //variantStyles[props.variant] + " " + defaultStyles + " " + sizeStyles[props.size] // Both will produce the same result as long as you remember to include the spaces in the concatenation version. The template literal version is generally preferred in modern JavaScript as it's cleaner and less error-prone.
 export const Button = (props: ButtonProps) => {
     return <button className={`${variantStyles[props.variant]} ${defaultStyles} ${sizeStyles[props.size]}`} >
-        <div className="flex items-center gap-1.5 ">
+        <div className="flex items-center gap-1.5 font-medium">
             {props.startIcon}{props.text}{props.endIcon}
         </div>
     </button>
