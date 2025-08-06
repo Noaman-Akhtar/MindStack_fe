@@ -10,7 +10,9 @@ export function Signup(){
             />
             <Input placeholder="Password" />
 </div>
+<div className="flex justify-center items-center">
             <Button variant="primary" text="Signup" size="md"/>
+            </div>
         </div>
 
     </div>
