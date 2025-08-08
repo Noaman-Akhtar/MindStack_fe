@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 interface ButtonProps { //things that the button component will contain 
     variant: "primary" | "secondary";
-    size: "sm" | "md" | "lg";
+    size: "sm" | "md" | "lg"|"full";
     text: string;
     startIcon?: ReactNode;
     endIcon?: ReactNode;
@@ -15,7 +15,8 @@ const variantStyles = { // different styles or commands for a specific prop
 const sizeStyles = {
     "sm": "py-1 px-2",
     "md": "py-3 px-3",
-    "lg": "p-6"
+    "lg": "p-6",
+    "full":"w-full flex justify-center items-center"
 }
 
 const defaultStyles = "rounded-md flex px-2"// //variantStyles[props.variant] + " " + defaultStyles + " " + sizeStyles[props.size] // Both will produce the same result as long as you remember to include the spaces in the concatenation version. The template literal version is generally preferred in modern JavaScript as it's cleaner and less error-prone.

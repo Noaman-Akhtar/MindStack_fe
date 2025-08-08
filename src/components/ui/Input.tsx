@@ -8,7 +8,7 @@ export  function Input({ onChange, placeholder }: InputProps) {
             <input 
                 placeholder={placeholder} 
                 type="text" 
-                className="px-4 py-2 border rounded m-2"
+                className="w-full border rounded "
                 onChange={onChange}
             />
         </div>
