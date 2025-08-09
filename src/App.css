@@ -2,3 +2,21 @@
 @theme {
   
 }
+.signup-bg{
+    position:relative;
+    overflow:hidden;
+
+}
+.blur-ellipse{
+    width:1200px;
+    height:500px;
+    border-radius: 50%;
+  background: radial-gradient(ellipse at center, #d4bbff 40%, #a084e8 50%, transparent 100%);
+    position: absolute;
+    top:600px;
+    left:50%;
+    transform: translateX(-50%);
+    filter:blur(330px);
+    opacity: 0.8;
+    z-index: 1;
+}
