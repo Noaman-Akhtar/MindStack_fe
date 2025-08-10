@@ -6,19 +6,22 @@ import { BACKEND_URL } from "../config";
 import { useNavigate } from "react-router-dom";
 
 
-export function Signup(){
-    const navigate= useNavigate();
+export function Signin(){
+    const navigate = useNavigate();
 const usernameRef = useRef<HTMLInputElement>(null);
 const passwordRef = useRef<HTMLInputElement>(null);
-    async function signup(){
+    async function signin(){
         const username=usernameRef.current?.value;
         const password=passwordRef.current?.value;
-       await axios.post(BACKEND_URL+ "/api/v1/signup",{
+       const response = await axios.post(BACKEND_URL+ "/api/v1/signin",{
             username,
             password
         });
-        alert("you have signed up!");
-      navigate("/signin");
+        const jwt = response.data.token;
+        localStorage.setItem("token",jwt);
+        //redirect to dashboard 
+navigate("/dashboard");
+        alert("you have signin up!");
     }
     return (
         <div className=" signup-bg h-screen w-screen bg-black flex justify-center items-center">
@@ -29,7 +32,7 @@ const passwordRef = useRef<HTMLInputElement>(null);
                     <Input variant="secondary" ref={passwordRef} placeholder="Password"  />
                 </div>
                 <div className="flex justify-center items-center mt-15">
-                    <Button variant="primary" text="Signup" size="full" onClick={signup} loading={false} />
+                    <Button variant="primary" text="Signin" size="full" onClick={signin} loading={false} />
                 
             </div>
             </div>
