@@ -5,7 +5,7 @@ interface InputProps{
     ref?:any;
 }
 const variantStyles={
-    "primary":"bg-slate-50",
+    "primary":"bg-gray-100",
     "secondary":"bg-[#131318]  text-white placeholder:text-gray-400 "
 }
 export function Input(props: InputProps) {
