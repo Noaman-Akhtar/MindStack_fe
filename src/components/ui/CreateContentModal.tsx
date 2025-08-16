@@ -1,3 +1,5 @@
+//createContentModal
+
 import { useRef, useState } from "react";
 import { Button } from "./Button";
 import { CrossIcon } from "./icons/CrossIcon";
@@ -14,9 +16,10 @@ enum ContentType {
 interface CreateContentModalProps{
     open:boolean;
     onClose?:() => void;
+    onContentAdded?: () => void;
 }
 
-export function CreateContentModal({open,onClose}:CreateContentModalProps){
+export function CreateContentModal({open,onClose,onContentAdded}:CreateContentModalProps){
     const titleref= useRef<HTMLInputElement>(null);
     const linkref= useRef<HTMLInputElement>(null);
     const [type,setType] = useState<ContentType | null>(null);
@@ -40,7 +43,7 @@ export function CreateContentModal({open,onClose}:CreateContentModalProps){
         setTypeError(null);
         await axios.post(`${BACKEND_URL}/api/v1/content`,{
             link,
-            title,
+            title,  
             type
         },{
             headers:{
@@ -48,6 +51,7 @@ export function CreateContentModal({open,onClose}:CreateContentModalProps){
             }
         })
         onClose?.();
+        onContentAdded?.();
     }
     //for closing on escape
       useEffect(() => {

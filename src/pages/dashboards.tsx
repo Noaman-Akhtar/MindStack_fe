@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../App.css';
 import { Button } from '../components/ui/Button';
 import { PlusIcon } from '../components/ui/icons/plusIcon';
@@ -6,10 +6,37 @@ import { ShareIcon } from '../components/ui/icons/shareIcon';
 import { Card } from '../components/ui/Card';
 import { CreateContentModal } from '../components/ui/CreateContentModal';
 import { Sidebar } from '../components/ui/Sidebar';
+import { BACKEND_URL } from "../config";
+import axios from "axios";
+
+
+
+type Content = {
+  id?: string;
+  _id?: string;
+  title: string;
+  link: string;
+  type: 'twitter' | 'youtube';
+};
 
 function Dashboard() {
   const [modalOpen, setModalOpen] = useState(false);
   const [extended, setExtended] = useState(true);
+  const [cards,setCards] = useState<Content[]>([]);
+ const fetchCards = async () => {
+    try {
+      const { data } = await axios.get(`${BACKEND_URL}/api/v1/content`, {
+        headers: { Authorization: localStorage.getItem("token") ?? "" }
+      });
+      setCards(data?.content ?? []);
+    } catch {
+      setCards([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchCards();
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#0F0F1A] flex">
@@ -22,7 +49,7 @@ function Dashboard() {
           extended ? 'ml-72' : 'ml-0'
         }`}
       >
-        <CreateContentModal open={modalOpen} onClose={() => setModalOpen(false)} />
+        <CreateContentModal open={modalOpen} onClose={() => setModalOpen(false)} onContentAdded={fetchCards}/>
 
         <div className="flex justify-end gap-4 py-1 mr-2">
           <div onClick={() => setModalOpen(true)}>
@@ -41,17 +68,20 @@ function Dashboard() {
           />
         </div>
 
-        <div className="flex flex-wrap gap-4 px-2 py-3">
-          <Card
-            type="twitter"
-            text="one of my tweets"
-            link="https://x.com/Noaman__Akhtar/status/1951374528434893066"
+        <div className="flex flex-wrap items-start  gap-4 px-2 py-3 ">
+    
+  
+         {cards.map(card =>(
+          // @ts-ignore: 'card' is inferred as never; temporary until state is typed
+          <Card key={card.id}
+            // @ts-ignore
+            type={card.type}
+            // @ts-ignore
+            text={card.title}
+            // @ts-ignore
+            link={card.link}
           />
-          <Card
-            type="youtube"
-            text="wtf pod"
-            link="https://www.youtube.com/watch?v=O7O204wD82s"
-          />
+         ))}
         </div>
       </div>
     </div>
