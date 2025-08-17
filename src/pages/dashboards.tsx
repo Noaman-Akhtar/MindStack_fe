@@ -9,6 +9,8 @@ import { Sidebar } from '../components/ui/Sidebar';
 import { BACKEND_URL } from "../config";
 import axios from "axios";
 
+type Filter =
+  'all'|'twitter'|'youtube';
 
 
 type Content = {
@@ -20,6 +22,7 @@ type Content = {
 };
 
 function Dashboard() {
+  const [filter,setFilter] = useState<Filter>("all");
   const [modalOpen, setModalOpen] = useState(false);
   const [extended, setExtended] = useState(true);
   const [cards,setCards] = useState<Content[]>([]);
@@ -37,11 +40,13 @@ function Dashboard() {
   useEffect(() => {
     fetchCards();
   }, []);
+const visibleCards = cards.filter(c=>filter === 'all' ? true : c.type === filter);
+
 
   return (
     <div className="min-h-screen bg-[#0F0F1A] flex">
       {/* Sidebar */}
-      <Sidebar extended={extended} setExtended={setExtended} />
+      <Sidebar extended={extended} setExtended={setExtended}    onSelectType={(f: Filter) => setFilter(f)} active={filter} />
 
       {/* Main content */}
       <div
@@ -71,13 +76,13 @@ function Dashboard() {
         <div className="flex flex-wrap items-start  gap-4 px-2 py-3 ">
     
   
-         {cards.map(card =>(
+         {visibleCards.map(card =>(
           // @ts-ignore: 'card' is inferred as never; temporary until state is typed
           <Card key={card.id}
             // @ts-ignore
             type={card.type}
             // @ts-ignore
-            text={card.title}
+            text={card.title} 
             // @ts-ignore
             link={card.link}
           />

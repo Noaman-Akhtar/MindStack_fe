@@ -3,17 +3,21 @@ import { TwitterIcon } from "./icons/twitter";
 import { YoutubeIcon } from "./icons/youtube";
 import { SidebarItem } from "./SidebarItem";
 import { assets } from "../../assets/assets.js";
-
+type Filter = 'all' | 'twitter' | 'youtube';
 export function Sidebar({
     extended,
     setExtended,
+    onSelectType,
+    active
 }: {
     extended: boolean;
     setExtended: (v: boolean) => void;
+    onSelectType: (f: Filter) => void;
+    active: Filter;
 }) {
     return (
         <>
-            {/* Sidebar */}
+
             <div
                 className={`h-screen bg-[#2D2B55] text-[#C4C2FF] border-r border-amber-50/10 w-72 fixed left-0 top-0 z-40 transition-transform duration-300 ${extended ? "translate-x-0" : "-translate-x-full"
                     }`}
@@ -37,8 +41,16 @@ export function Sidebar({
 
                 {/* Sidebar items */}
                 <div className="mt-6 space-y-2">
-                    <SidebarItem text="Tweets" icon={<TwitterIcon />} />
-                    <SidebarItem text="YouTube" icon={<YoutubeIcon />} />
+                    <div onClick={() => onSelectType('all')} className={active === 'all' ? 'bg-white/10' : ''}>
+                        <SidebarItem text="All" icon={<></>} />
+                    </div>
+                    <div onClick={() => onSelectType('twitter')} className={active === 'twitter' ? 'bg-white/10' : ''}>
+                        <SidebarItem text="Tweets" icon={<TwitterIcon />} />
+                    </div>
+                    <div onClick={() => onSelectType('youtube')} className={active === 'youtube' ? 'bg-white/10' : ''}>
+                        <SidebarItem text="YouTube" icon={<YoutubeIcon />} />
+                    </div>
+
                 </div>
             </div>
 
