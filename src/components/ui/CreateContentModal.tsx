@@ -67,8 +67,8 @@ return( <div>
               onClick={(e) => e.stopPropagation()} // keep clicks inside from bubbling to overlay"
               ><div className="flex justify-end" onClick={onClose} ><CrossIcon/></div>
 <div className="w-3xs flex flex-col gap-y-2">
-    <Input variant="primary" ref={titleref} placeholder={"Title"}/>
-    <Input variant="primary" ref={linkref} placeholder={"Link"}/>
+    <Input variant="primary" ref={titleref} placeholder={"Title"} type="text" />
+    <Input variant="primary" ref={linkref} placeholder={"Link"} type="text" />
                         {/* Type selector */}
                         <div className="relative mt-3 flex justify-center ">
                             <div onClick={() => setMenuOpen(v => !v)}>

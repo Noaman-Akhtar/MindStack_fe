@@ -26,6 +26,7 @@ function Dashboard() {
   const [modalOpen, setModalOpen] = useState(false);
   const [extended, setExtended] = useState(true);
   const [cards,setCards] = useState<Content[]>([]);
+
  const fetchCards = async () => {
     try {
       const { data } = await axios.get(`${BACKEND_URL}/api/v1/content`, {
@@ -40,6 +41,21 @@ function Dashboard() {
   useEffect(() => {
     fetchCards();
   }, []);
+
+  const handleDelete = async (id:string)=>{
+    const prev = cards;
+    setCards(prev.filter(c=>(c._id??c.link)!==id));
+    try{
+      await axios.delete(`${BACKEND_URL}/api/v1/content/${id}`,{
+        headers:{Authorization:localStorage.getItem('token')??''}
+      })
+    }
+    catch(e){
+      setCards(prev);
+      console.error(e);
+      alert('Failed to delete. Try again.');
+    }
+  }
 const visibleCards = cards.filter(c=>filter === 'all' ? true : c.type === filter);
 
 
@@ -73,18 +89,21 @@ const visibleCards = cards.filter(c=>filter === 'all' ? true : c.type === filter
           />
         </div>
 
-        <div className="flex flex-wrap items-start  gap-4 px-2 py-3 ">
+        <div className="flex flex-wrap items-start gap-4 px-2 py-3 ">
     
   
          {visibleCards.map(card =>(
           // @ts-ignore: 'card' is inferred as never; temporary until state is typed
-          <Card key={card.id}
-            // @ts-ignore
+          <Card key={card.id??card._id??card.link}
+        
+            _id={card._id}
+            
             type={card.type}
-            // @ts-ignore
+            
             text={card.title} 
-            // @ts-ignore
+          
             link={card.link}
+            onDelete={handleDelete}
           />
          ))}
         </div>

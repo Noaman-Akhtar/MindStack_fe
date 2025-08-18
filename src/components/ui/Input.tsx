@@ -1,4 +1,5 @@
 interface InputProps{
+    type: "text" | "password";
     variant:"primary"|"secondary";
     onChange?:(e:React.ChangeEvent<HTMLInputElement>)=> void ;
     placeholder:string;
@@ -14,9 +15,8 @@ export function Input(props: InputProps) {
             <input 
             ref={props.ref}
                 placeholder={props.placeholder} 
-                type="text" 
-                className={"w-full border border-purple-400/10 focus:border-purple-900/30 rounded h-13 pl-3 py-2  text-xlplaceholder:italic transition-colors duration-200"+" "+variantStyles[props.variant]}
-                
+                type={props.type} 
+                className={"w-full tracking-wider border border-purple-400/10 focus:border-purple-900/30 rounded h-13 pl-3 py-2  text-xlplaceholder:italic transition-colors duration-200"+" "+variantStyles[props.variant]}
             />
         </div>
  )};

@@ -25,8 +25,8 @@ const passwordRef = useRef<HTMLInputElement>(null);
             <div className="blur-ellipse"></div>
             <div className="fixed max-w-96 h-80 m-2 w-full border border-gray-300/20 shadow-md bg-[#303060]/20 rounded-lg p-6 ">
                 <div className="flex flex-col  mt-8 gap-y-6">
-                    <Input variant="secondary" ref={usernameRef} placeholder="UserName"  />
-                    <Input variant="secondary" ref={passwordRef} placeholder="Password"  />
+                    <Input variant="secondary" ref={usernameRef} placeholder="UserName" type="text" />
+                    <Input variant="secondary" ref={passwordRef} placeholder="Password" type="password" />
                 </div>
                 <div className="flex justify-center items-center mt-15">
                     <Button variant="primary" text="Signup" size="full" onClick={signup} loading={false} />
