@@ -1,0 +1,31 @@
+.controls {
+  display: flex;
+  border: 1px solid #ccc;
+  border-top: 0;
+  padding: 10px;
+}
+
+.controls-right {
+  margin-left: auto;
+}
+
+.state {
+  margin: 10px 0;
+  font-family: monospace;
+}
+
+.state-title {
+  color: #999;
+  text-transform: uppercase;
+}
+.ql-container { min-height: 220px; }
+.ql-editor { min-height: 180px; }
+
+.ql-editor img {
+  max-width: min(100%, 480px); /* cap width to 480px, stay responsive */
+  max-height: 320px;           /* cap height */
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0.5rem auto;         /* center the image */
+}

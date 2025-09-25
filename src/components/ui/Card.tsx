@@ -1,64 +1,58 @@
-import { PlusIcon } from "./icons/plusIcon";
-import { ShareIcon } from "./icons/shareIcon";
+import { ShareIcon } from "../icons/shareIcon";
 import { Trash } from "lucide-react";
-import { TwitterIcon } from "./icons/twitter";
-import { YoutubeIcon } from "./icons/youtube";
+import { TwitterIcon } from "../icons/twitter";
+import { YoutubeIcon } from "../icons/youtube";
+import { Notes } from "../icons/notes"
+import { useEffect, useRef, useState } from "react";
+import { getYouTubeId, getYouTubeEmbedUrl, normalizeTwitterUrl } from "../../utils/embed";
+
+import { normalizeModuleId } from "vite/module-runner";
 
 interface CardProps {
-   
     _id?: string;
     text: string;
     type: "twitter" | "youtube";
     link: string;
+    note?: string;
     onDelete?: (id: string) => void;
 }
 
-// Parse a YouTube URL to extract the video ID from watch, shorts, youtu.be, or embed forms
-function getYouTubeId(url: string): string | null {
-    try {
-        const u = new URL(url);
-        const host = u.hostname.toLowerCase();
+// Remove the getYouTubeId function since it's now imported from utils
 
-        // youtu.be/<id>
-        if (host.includes("youtu.be")) {
-            const id = u.pathname.slice(1);
-            return id || null;
+export function Card({ _id, text, type, link, onDelete, note }: CardProps) {
+
+    useEffect(() => {
+        if (type === "twitter" && document.getElementById('twitter-wjs')) {
+            try {
+                // @ts-ignore
+                window.twttr?.widgets?.load();
+            } catch (e) {
+                console.warn('Twitter widget load failed', e);
+            }
+            return;
         }
+    }, [])
 
-        // youtube.com/* variants
-        if (host.includes("youtube.com")) {
-            // /watch?v=<id>
-            if (u.pathname.startsWith("/watch")) {
-                return u.searchParams.get("v");
-            }
-            // /shorts/<id>
-            if (u.pathname.startsWith("/shorts/")) {
-                return u.pathname.split("/")[2] || null;
-            }
-            // /embed/<id>
-            if (u.pathname.startsWith("/embed/")) {
-                return u.pathname.split("/")[2] || null;
-            }
-        }
-
-        return null;
-    } catch {
-        return null;
-    }
-}
-
-export function Card({ _id, text, type, link, onDelete }: CardProps) {
     const ytId = type === "youtube" ? getYouTubeId(link) : null;
-    const ytEmbed = ytId ? `https://www.youtube.com/embed/${ytId}` : null; // or https://www.youtube-nocookie.com/embed/${ytId}
+    const ytEmbed = ytId ? getYouTubeEmbedUrl(ytId) : null;
+    const noteRef = useRef<HTMLDivElement>(null);
 
-    return (
-        <div className="p-4 bg-white rounded-md shadow-md border-gray-200 min-w-68 border h-70 overflow-y-auto">
+
+    return ( //#303060
+        <div className="p-4 bg-[#303060] rounded-md shadow-md text-white border-gray-600 w-70 mt-8 border h-70 overflow-y-auto scrollbar-hidden">
             <div className="flex justify-between">
-                <div className="flex items-center gap-1.5">
-                   {type==="twitter"&& <TwitterIcon/>}{type==="youtube" && <YoutubeIcon/>} 
-                    {text}
+                <div className="flex items-center justify-center gap-1.5">
+                    {type === "twitter" && <TwitterIcon />}{type === "youtube" && <YoutubeIcon />}
+                    <p>{text}</p>
                 </div>
+
                 <div className=" ml-2 flex items-center gap-2">
+                    {note && <div className=" cursor-pointer" onClick={() => {
+                        noteRef.current?.scrollIntoView({ behavior: 'smooth', block: "center" })
+                    }}>
+                        <Notes />
+                    </div>}
+
                     <a href={link} target="_blank" rel="noopener noreferrer">
                         <ShareIcon size="md" />
                     </a>
@@ -67,7 +61,7 @@ export function Card({ _id, text, type, link, onDelete }: CardProps) {
                         className="text-red-500 hover:text-red-600 "
                         onClick={(e) => {
                             e.stopPropagation();
-                            if(_id) onDelete?.(_id);
+                            if (_id) onDelete?.(_id);
                         }}
                     >
                         <Trash className="hover:cursor-pointer" size={19} />
@@ -75,7 +69,7 @@ export function Card({ _id, text, type, link, onDelete }: CardProps) {
                 </div>
             </div>
 
-            <div className="pt-4">
+            <div className="pt-4 ">
                 {type === "youtube" && (
                     ytEmbed ? (
                         <iframe
@@ -97,14 +91,19 @@ export function Card({ _id, text, type, link, onDelete }: CardProps) {
                             Open on YouTube
                         </a>
                     )
+
                 )}
 
                 {type === "twitter" && (
                     <blockquote className="twitter-tweet">
-                        <a href={link.replace("x.com", "twitter.com")}></a>
+                        <a href={normalizeTwitterUrl(link)}></a>
                     </blockquote>
                 )}
             </div>
+            {note && <div ref={noteRef} className=" pt-8">
+                {note}
+            </div>}
+
         </div >
     );
 }

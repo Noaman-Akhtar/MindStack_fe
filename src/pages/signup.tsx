@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import axios from "axios";
@@ -6,19 +6,25 @@ import { BACKEND_URL } from "../config";
 import { useNavigate } from "react-router-dom";
 
 
-export function Signup(){
-    const navigate= useNavigate();
-const usernameRef = useRef<HTMLInputElement>(null);
-const passwordRef = useRef<HTMLInputElement>(null);
-    async function signup(){
-        const username=usernameRef.current?.value;
-        const password=passwordRef.current?.value;
-       await axios.post(BACKEND_URL+ "/api/v1/signup",{
+export function Signup() {
+    const navigate = useNavigate();
+    const usernameRef = useRef<HTMLInputElement>(null);
+    const passwordRef = useRef<HTMLInputElement>(null);
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            navigate("/dashboard")
+        }
+    }, [])
+    async function signup() {
+        const username = usernameRef.current?.value.trim();
+        const password = passwordRef.current?.value;
+        await axios.post(BACKEND_URL + "/api/v1/signup", {
             username,
             password
         });
         alert("you have signed up!");
-      navigate("/signin");
+        navigate("/signin");
     }
     return (
         <div className=" signup-bg h-screen w-screen bg-black flex justify-center items-center">
@@ -30,8 +36,8 @@ const passwordRef = useRef<HTMLInputElement>(null);
                 </div>
                 <div className="flex justify-center items-center mt-15">
                     <Button variant="primary" text="Signup" size="full" onClick={signup} loading={false} />
-                
-            </div>
+
+                </div>
             </div>
         </div>
     );

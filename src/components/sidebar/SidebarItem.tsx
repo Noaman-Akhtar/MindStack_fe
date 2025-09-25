@@ -6,7 +6,7 @@ export function SidebarItem({text,icon}:{
 }){
     
     return <div className="flex items-center pl-5 gap-3 text-l cursor-pointer hover:bg-gray-700 px-4 py-4 rounded-md  w-full">
-        <div className="w-6 h-6 mt-1.5 flex items-center justify-center">
+        <div className="w-6 h-6 flex items-center justify-center ">
             {icon}
         </div>
         <div className="text-xl font-medium">{text}</div>

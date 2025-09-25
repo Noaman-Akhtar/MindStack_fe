@@ -1,7 +1,8 @@
-import { Logo } from "./icons/MindStacklogo";
-import { TwitterIcon } from "./icons/twitter";
-import { YoutubeIcon } from "./icons/youtube";
-import { SidebarItem } from "./SidebarItem";
+import { Logo } from "../icons/MindStacklogo.js";
+import { TwitterIcon } from "../icons/twitter.js";
+import { YoutubeIcon } from "../icons/youtube.js";
+import{AllLogo} from "../icons/All.js"
+import { SidebarItem } from "./SidebarItem.js";
 import { assets } from "../../assets/assets.js";
 import { useNavigate } from "react-router-dom";
 import { LogOut } from "lucide-react";
@@ -32,7 +33,7 @@ export function Sidebar({
                 className={`h-screen bg-[#2D2B55] text-[#C4C2FF] border-r border-amber-50/10 w-72 fixed left-0 top-0 z-40 transition-transform duration-300 ${extended ? "translate-x-0" : "-translate-x-full"
                     } flex flex-col`}
             >
-       
+
                 <div className="flex items-center px-4 py-1 gap-3 ">
                     <img
                         onClick={() => setExtended(!extended)}
@@ -48,13 +49,13 @@ export function Sidebar({
                     </div>
                 </div>
 
-                
+
                 <div className="mt-6 space-y-2 flex-1">
                     <div
                         onClick={() => onSelectType("all")}
                         className={active === "all" ? "bg-white/10" : ""}
                     >
-                        <SidebarItem text="All" icon={<></>} />
+                        <SidebarItem text="All" icon={<AllLogo/>} />
                     </div>
                     <div
                         onClick={() => onSelectType("twitter")}
@@ -70,13 +71,13 @@ export function Sidebar({
                     </div>
                 </div>
 
-             
+
                 <div className="mt-auto mb-6" onClick={handleLogout}>
                     <SidebarItem text="Logout" icon={<LogOut className="w-6 h-6" />} />
                 </div>
             </div>
 
-             {/* Floating menu button when closed  */}
+            {/* Floating menu button when closed  */}
             {!extended && (
                 <img
                     onClick={() => setExtended(true)}
