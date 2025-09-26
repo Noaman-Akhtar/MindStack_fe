@@ -82,8 +82,8 @@ export function CreateContentModal({
     return (
         <div className="flex flex-col justify-center relative">
             <div
-                className="bg-white p-10 w-250 rounded-md"
-                onClick={(e) => e.stopPropagation()} // keep clicks inside from bubbling to overlay"
+                className="bg-white p-10 w-250px rounded-md max-h-[calc(110vh-4rem)] overflow-y-auto max-w-[95vw]"
+                onClick={(e) => e.stopPropagation()} 
             >
                 <div className="absolute top-[1%] right-[1%] cursor-pointer" onClick={onClose}>
                     <CrossIcon />
@@ -114,7 +114,7 @@ export function CreateContentModal({
                     </div>
                     
 
-                    <div className="relative mt-3 flex justify-center ">
+                    <div className="relative mt-2 flex justify-center ">
                         <div onClick={() => setMenuOpen((v) => !v)}>
                             <Button
                                 variant="primary"
@@ -123,7 +123,7 @@ export function CreateContentModal({
                             />
                         </div>
                         {menuOpen && (
-                            <div className="absolute left-0 right-0 mt-2 bg-white text-black rounded-md shadow-lg ring-1 ring-black/5 z-50">
+                            <div className="absolute left-0 right-0 mt-1 bg-white text-black rounded-md shadow-lg ring-1 ring-black/5 z-50">
                                 {typeOptions.map((opt) => (
                                     <button
                                         key={opt.value}

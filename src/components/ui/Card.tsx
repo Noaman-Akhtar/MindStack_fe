@@ -39,14 +39,14 @@ export function Card({ _id, text, type, link, onDelete, note }: CardProps) {
 
 
     return ( //#303060
-        <div className="p-4 bg-[#303060] rounded-md shadow-md text-white border-gray-600 w-70 mt-8 border h-70 overflow-y-auto scrollbar-hidden">
+        <div className="p-4 bg-[#303060] rounded-md transition-transform duration-300 ease-in-out transform hover:scale-106 shadow-md text-white border-gray-600 w-76 mt-8 border h-70 overflow-y-auto scrollbar-hidden">
             <div className="flex justify-between">
                 <div className="flex items-center justify-center gap-1.5">
                     {type === "twitter" && <TwitterIcon />}{type === "youtube" && <YoutubeIcon />}
                     <p>{text}</p>
                 </div>
 
-                <div className=" ml-2 flex items-center gap-2">
+                <div className=" ml-2 flex items-center gap-3">
                     {note && <div className=" cursor-pointer" onClick={() => {
                         noteRef.current?.scrollIntoView({ behavior: 'smooth', block: "center" })
                     }}>
@@ -54,7 +54,7 @@ export function Card({ _id, text, type, link, onDelete, note }: CardProps) {
                     </div>}
 
                     <a href={link} target="_blank" rel="noopener noreferrer">
-                        <ShareIcon size="md" />
+                        <ShareIcon size="md"  />
                     </a>
                     <button
                         aria-label="Delete" title="Delete"
@@ -64,7 +64,7 @@ export function Card({ _id, text, type, link, onDelete, note }: CardProps) {
                             if (_id) onDelete?.(_id);
                         }}
                     >
-                        <Trash className="hover:cursor-pointer" size={19} />
+                        <Trash className="hover:cursor-pointer " size={14} />
                     </button>
                 </div>
             </div>
@@ -93,14 +93,22 @@ export function Card({ _id, text, type, link, onDelete, note }: CardProps) {
                     )
 
                 )}
+{type === "twitter" && (
+  <div className="tweet-embed">
+    <div
+      className="tweet-scale"
+      style={{ transform: 'scale(0.8)', width: '125%'  }} // adjust scale & width
+    >
+      <blockquote className="twitter-tweet">
+        <a href={normalizeTwitterUrl(link)}></a>
+      </blockquote>
+    </div>
+  </div>
+)}
 
-                {type === "twitter" && (
-                    <blockquote className="twitter-tweet">
-                        <a href={normalizeTwitterUrl(link)}></a>
-                    </blockquote>
-                )}
+
             </div>
-            {note && <div ref={noteRef} className=" pt-8">
+            {note && <div ref={noteRef} className={type=="twitter"? "pt-1":"pt-6"}>
                 {note}
             </div>}
 

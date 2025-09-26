@@ -18,12 +18,12 @@
   color: #999;
   text-transform: uppercase;
 }
-.ql-container { min-height: 220px; }
-.ql-editor { min-height: 180px; }
+.ql-container { min-height: 120px; }
+.ql-editor { min-height: 80px; }
 
 .ql-editor img {
-  max-width: min(100%, 480px); /* cap width to 480px, stay responsive */
-  max-height: 320px;           /* cap height */
+  max-width: min(100%, 100px); /* cap width to 480px, stay responsive */
+  max-height: 100px;           /* cap height */
   height: auto;
   object-fit: contain;
   display: block;

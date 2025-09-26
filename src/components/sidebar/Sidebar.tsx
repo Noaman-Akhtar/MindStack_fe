@@ -37,7 +37,7 @@ export function Sidebar({
                 <div className="flex items-center px-4 py-1 gap-3 ">
                     <img
                         onClick={() => setExtended(!extended)}
-                        className="cursor-pointer w-8 h-8 bg-[#3E3B6D] hover:bg-[#4D4A80] rounded-full shadow-md p-1 fixed transition-colors duration-300 left-56"
+                        className="cursor-pointer w-8 h-8 bg-[#3E3B6D] hover:bg-[#4D4A80] rounded-full shadow-md p-1 fixed transition-colors duration-300 left-60"
                         src={assets.menu_icon}
                         alt="menu"
                     />
@@ -77,7 +77,7 @@ export function Sidebar({
                 </div>
             </div>
 
-            {/* Floating menu button when closed  */}
+        
             {!extended && (
                 <img
                     onClick={() => setExtended(true)}

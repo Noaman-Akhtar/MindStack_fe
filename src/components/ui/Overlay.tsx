@@ -8,7 +8,7 @@ interface OverlayProps {
     Modal?: ReactElement;
 }
 
-export function Overlay({ open, onClose, onContentAdded, Modal }: OverlayProps) {
+export function Overlay({ open, onClose, Modal }: OverlayProps) {
 
     //for closing on escape
     useEffect(() => {
@@ -20,7 +20,7 @@ export function Overlay({ open, onClose, onContentAdded, Modal }: OverlayProps) 
 
     return (
         <>
-            {open && <div className="fixed inset-0 bg-slate-500/60 flex items-center z-2 justify-center" onClick={onClose}>
+            {open && <div className="fixed inset-0 bg-slate-500/60 flex items-center z-2 justify-center  p-4" onClick={onClose}>
                 {Modal}
             </div>
             }
