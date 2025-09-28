@@ -22,6 +22,8 @@ export function CreateContentModal({
     onClose,
     onContentAdded,
 }: CreateContentModalProps) {
+    const [richNote,setRichNote] = useState("");
+    const [richNoteDelta,setRichNoteDelta] = useState<any>(null);
     const titleref = useRef<HTMLInputElement>(null);
     const linkref = useRef<HTMLInputElement>(null);
     const [type, setType] = useState<ContentType | null>(null);
@@ -64,6 +66,8 @@ export function CreateContentModal({
                     title,
                     type,
                     note,
+                    richNote,
+                    richNoteDelta
                 },
                 {
                     headers: {
@@ -110,7 +114,7 @@ export function CreateContentModal({
                         ></textarea>
                     </div>
                     <div className="mt-2 focus:ring-2 focus:black focus:border-transparent">
-                        <RichTextEditor/>
+                        <RichTextEditor onDeltaChange={setRichNoteDelta} onHtmlChange={setRichNote}/>
                     </div>
                     
 

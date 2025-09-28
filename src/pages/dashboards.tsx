@@ -9,10 +9,13 @@ import { BACKEND_URL } from "../config";
 import axios from "axios";
 import { Overlay } from '../components/ui/Overlay';
 import { CreateContentModal } from '../components/modals/CreateContentModal';
+import { ViewContentModal } from '../components/modals/viewModal';
 
 type Filter = 'all' | 'twitter' | 'youtube';
 
 type Content = {
+  richNote: string | undefined;
+  richNoteDelta: any;
   id?: string;
   _id?: string;
   title: string;
@@ -26,7 +29,7 @@ function Dashboard() {
   const [modalOpen, setModalOpen] = useState(false);
   const [extended, setExtended] = useState(true);
   const [cards, setCards] = useState<Content[]>([]);
-
+  const [viewingId, setViewingId] = useState<string | null>(null); 
 
   const fetchCards = async () => {
     try {
@@ -60,6 +63,7 @@ function Dashboard() {
 
   const visibleCards = cards.filter(c => filter === 'all' ? true : c.type === filter);
 
+const viewingContent = cards.find(c => c._id === viewingId) || null;
   return (
     <div className="min-h-screen bg-[#0F0F1A] ">
       {/* Sidebar */}
@@ -80,8 +84,30 @@ function Dashboard() {
           onClose={() => setModalOpen(false)} 
           onContentAdded={fetchCards} 
           Modal={<CreateContentModal onClose={() => setModalOpen(false)} onContentAdded={fetchCards} />} 
-        />
-
+        />  
+        <Overlay
+            open={!!viewingContent}
+            onClose={() => setViewingId(null)}
+            Modal={
+            viewingContent ? (
+      // content={viewingContent}
+      //   onClose={() => setViewingId(null)}
+      //   onUpdated={(updated) => {
+      //     // Patch local state
+      //       setCards(prev => prev.map(c => c._id === updated._id ? { ...c, ...updated } : c));
+      //   }}
+      
+      <ViewContentModal 
+      content={viewingContent}
+      onClose={() => setViewingId(null)}
+      onUpdated={(updated) => {
+        // Patch local state
+          setCards(prev => prev.map(c => c._id === updated._id ? { ...c, ...updated } : c));
+      }}
+      />
+    ) : undefined
+  }
+/>
         
         <div className="flex justify-end gap-5 py-2 pt-4 mr-2">
           <Button
@@ -102,14 +128,17 @@ function Dashboard() {
         <div className={`flex flex-wrap items-start gap-6 px-2 py-3 ${extended ? "ml-7" : "ml-0"}`}>
           {visibleCards.map(card => (
             <Card
-              key={card.id ?? card._id ?? card.link}
-              _id={card._id}
-              type={card.type}
-              text={card.title}
-              link={card.link}
-              note={card.note}
-              onDelete={handleDelete}
-            />
+  key={card._id}
+  _id={card._id}
+  type={card.type}
+  text={card.title}
+  link={card.link}
+  note={card.note}
+  richNote={card.richNote}
+  richNoteDelta={card.richNoteDelta}
+  onDelete={handleDelete}
+  onView={setViewingId}
+/>
           ))}
         </div>
       </div>

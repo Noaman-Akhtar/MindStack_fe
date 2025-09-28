@@ -14,12 +14,16 @@ interface CardProps {
     type: "twitter" | "youtube";
     link: string;
     note?: string;
+    richNote?:string;
+    richNoteDelta?:any;
     onDelete?: (id: string) => void;
+    
+    onView?: (id: string) => void;
 }
 
 // Remove the getYouTubeId function since it's now imported from utils
 
-export function Card({ _id, text, type, link, onDelete, note }: CardProps) {
+export function Card({ _id, text, type, link, onDelete, note,onView,richNote,richNoteDelta }: CardProps) {
 
     useEffect(() => {
         if (type === "twitter" && document.getElementById('twitter-wjs')) {
@@ -47,10 +51,26 @@ export function Card({ _id, text, type, link, onDelete, note }: CardProps) {
                 </div>
 
                 <div className=" ml-2 flex items-center gap-3">
+                                        { onView && _id && (
+                                                <button
+                                                    className="text-blue-500 hover:text-blue-600 "
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        try {
+                                                            console.log('Card view clicked', _id);
+                                                            onView(_id);
+                                                        } catch (err) {
+                                                            console.error('onView handler error', err);
+                                                        }
+                                                    }}
+                                                >
+                                                    view
+                                                </button>
+                                        )}
                     {note && <div className=" cursor-pointer" onClick={() => {
                         noteRef.current?.scrollIntoView({ behavior: 'smooth', block: "center" })
                     }}>
-                        <Notes />
+                        <Notes/>
                     </div>}
 
                     <a href={link} target="_blank" rel="noopener noreferrer">
