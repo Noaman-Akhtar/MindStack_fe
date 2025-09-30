@@ -11,7 +11,7 @@ import { Overlay } from '../components/ui/Overlay';
 import { CreateContentModal } from '../components/modals/CreateContentModal';
 import { ViewContentModal } from '../components/modals/viewModal';
 
-type Filter = 'all' | 'twitter' | 'youtube';
+type Filter = 'all' | 'twitter' | 'youtube'|'random';
 
 type Content = {
   richNote: string | undefined;

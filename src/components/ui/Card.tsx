@@ -7,11 +7,12 @@ import { useEffect, useRef, useState } from "react";
 import { getYouTubeId, getYouTubeEmbedUrl, normalizeTwitterUrl } from "../../utils/embed";
 
 import { normalizeModuleId } from "vite/module-runner";
+import { DocumentIcon } from "../icons/document";
 
 interface CardProps {
     _id?: string;
     text: string;
-    type: "twitter" | "youtube";
+    type: "twitter" | "youtube"|"random";
     link: string;
     note?: string;
     richNote?:string;
@@ -47,38 +48,40 @@ export function Card({ _id, text, type, link, onDelete, note,onView,richNote,ric
             <div className="flex justify-between">
                 <div className="flex items-center justify-center gap-1.5">
                     {type === "twitter" && <TwitterIcon />}{type === "youtube" && <YoutubeIcon />}
-                    <p>{text}</p>
+                    <p className="font-medium text-md">{text}</p>
                 </div>
 
                 <div className=" ml-2 flex items-center gap-3">
                                         { onView && _id && (
                                                 <button
-                                                    className="text-blue-500 hover:text-blue-600 "
+                                                    className=" cursor-pointer text-[#b0b1af] hover:text-blue-600 "
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         try {
-                                                            console.log('Card view clicked', _id);
+                                                            
                                                             onView(_id);
                                                         } catch (err) {
                                                             console.error('onView handler error', err);
                                                         }
                                                     }}
                                                 >
-                                                    view
+                                                    <DocumentIcon/>
                                                 </button>
                                         )}
-                    {note && <div className=" cursor-pointer" onClick={() => {
+                    {note && <button className="hover:text-blue-600 text-[#b0b1af] cursor-pointer" onClick={() => {
                         noteRef.current?.scrollIntoView({ behavior: 'smooth', block: "center" })
                     }}>
-                        <Notes/>
-                    </div>}
-
-                    <a href={link} target="_blank" rel="noopener noreferrer">
+                        <Notes />
+                    </button>}
+                    <div className="hover:text-blue-600 text-[#b0b1af] cursor-pointer">
+                         <a  href={link} target="_blank" rel="noopener noreferrer">
                         <ShareIcon size="md"  />
                     </a>
+                    </div>
+                   
                     <button
                         aria-label="Delete" title="Delete"
-                        className="text-red-500 hover:text-red-600 "
+                        className="text-red-500 hover:text-red-700 "
                         onClick={(e) => {
                             e.stopPropagation();
                             if (_id) onDelete?.(_id);
@@ -128,7 +131,7 @@ export function Card({ _id, text, type, link, onDelete, note,onView,richNote,ric
 
 
             </div>
-            {note && <div ref={noteRef} className={type=="twitter"? "pt-1":"pt-6"}>
+            {note && <div ref={noteRef} className={`${type=="twitter"? "pt-1":"pt-6"} whitespace-pre-wrap text-lg ${type=='random'?"font-medium text-xl":"font-normal"}`}>
                 {note}
             </div>}
 

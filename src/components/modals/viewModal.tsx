@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import DOMPurify from "dompurify";
 import { CrossIcon } from "../icons/CrossIcon";
 import {
@@ -7,6 +7,7 @@ import {
     normalizeTwitterUrl,
 } from "../../utils/embed";
 import { RichTextEditor } from "../ui/RichTextEditor/RichtextEditor";
+import Quill from "quill";
 import axios from "axios";
 import { BACKEND_URL } from "../../config";
 
@@ -21,25 +22,39 @@ export function ViewContentModal({
     onClose,
     onUpdated,
 }: ViewContentModalProps) {
-    const { _id, title, type, link, note, richNote, richNoteDelta } = content;
+    const { _id, title, richNoteDelta } = content; // removed unused: type, link, note
     const [editMode, setEditMode] = useState(false);
-    const [html, setHtml] = useState(richNote || "");
     const [delta, setDelta] = useState<any>(richNoteDelta || null);
+    // html state is only for edit mode live preview; for view mode we derive from delta
+    const [html, setHtml] = useState("");
 
     // When a different content object is provided, sync local state (especially if modal reused)
     useEffect(() => {
-        setHtml(richNote || "");
         setDelta(richNoteDelta || null);
-    }, [_id, richNote, richNoteDelta]);
+        // Reset html (will be regenerated in edit mode or derived for view)
+        setHtml("");
+    }, [_id, richNoteDelta]);
     const [saving, setSaving] = useState(false);
     const [lightboxImg, setLightboxImg] = useState<string | null>(null);
 
    
-    const safeHtml = useMemo(
-        () =>
-            html ? DOMPurify.sanitize(html, { USE_PROFILES: { html: true } }) : "",
-        [html]
-    );
+    // Helper to convert delta -> HTML (for view mode) without storing richNote on backend
+    const deltaToHtml = useCallback((d: any): string => {
+        if (!d) return "";
+        try {
+            const tempContainer = document.createElement("div");
+            const q = new Quill(tempContainer);
+            q.setContents(d);
+            return q.root.innerHTML;
+        } catch {
+            return "";
+        }
+    }, []);
+
+    const safeHtml = useMemo(() => {
+        const base = editMode ? html : deltaToHtml(delta);
+        return base ? DOMPurify.sanitize(base, { USE_PROFILES: { html: true } }) : "";
+    }, [html, delta, editMode, deltaToHtml]);
 
    
     useEffect(() => {
@@ -61,13 +76,8 @@ export function ViewContentModal({
         try {
             const { data } = await axios.put(
                 `${BACKEND_URL}/api/v1/content/${_id}`,
-                {
-                    richNote: html,
-                    richNoteDelta: delta,
-                },
-                {
-                    headers: { Authorization: localStorage.getItem("token") },
-                }
+                { richNoteDelta: delta },
+                { headers: { Authorization: localStorage.getItem("token") } }
             );
             onUpdated?.(data.content);
             setEditMode(false);
@@ -108,8 +118,8 @@ export function ViewContentModal({
                             <button
                                 className="px-3 py-1 text-sm rounded bg-gray-300 hover:bg-gray-200"
                                 onClick={() => {
-                                    setHtml(richNote || "");
                                     setDelta(richNoteDelta || null);
+                                    setHtml("");
                                     setEditMode(false);
                                 }}
                             >

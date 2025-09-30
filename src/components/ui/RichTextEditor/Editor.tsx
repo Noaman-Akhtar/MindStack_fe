@@ -57,7 +57,7 @@ const Editor = forwardRef<Quill | null, EditorProps>(
         container.ownerDocument.createElement('div'),
       );
 
-      // Make the Quill root fill the parent
+      
       editorContainer.className = "quill-root";
 
       const quill = new Quill(editorContainer, {

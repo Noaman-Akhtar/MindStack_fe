@@ -10,7 +10,7 @@ import { RichTextEditor } from "../ui/RichTextEditor/RichtextEditor";
 enum ContentType {
     Youtube = "youtube",
     Twitter = "twitter",
-    RandomLinks = "random",
+    Random = "random",
 }
 
 interface CreateContentModalProps {
@@ -34,7 +34,7 @@ export function CreateContentModal({
     const typeOptions: { label: string; value: ContentType }[] = [
         { label: "YouTube", value: ContentType.Youtube },
         { label: "Twitter", value: ContentType.Twitter },
-        { label: "Random links", value: ContentType.RandomLinks },
+        { label: "Random", value: ContentType.Random },
     ];
     const currentLabel =
         typeOptions.find((o) => o.value === type)?.label ?? "Select type";
@@ -105,11 +105,11 @@ export function CreateContentModal({
                         placeholder={"Link"}
                         type="text"
                     />
-                    <div>
+                    <div >
                         <textarea
                             ref={noteRef}
-                            placeholder="Notes (optional)"
-                            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:black focus:border-transparent"
+                            placeholder="Description (optional)"
+                            className="w-full p-2 border text-lg border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:black focus:border-transparent"
                             rows={4}
                         ></textarea>
                     </div>

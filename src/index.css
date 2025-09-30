@@ -40,14 +40,6 @@ html, body, #root {
 }
 
 
-.rich-note-view img {
-  max-width: 100%;
-  height: auto;
-  cursor: zoom-in;
-  border-radius: 6px;
-  display: block;
-  margin: 0.75rem 0;
-}
 
 .rich-note-view a {
   color: #3b82f6;
@@ -55,11 +47,7 @@ html, body, #root {
   word-break: break-word;
 }
 
-.rich-note-view blockquote {
-  margin-left: 0;
-  padding-left: 1rem;
-  border-left: 4px solid #ddd;
-}
+
 
 .rich-note-view pre {
   background: #1e1e2a;
@@ -70,3 +58,36 @@ html, body, #root {
   font-size: 0.85rem;
   line-height: 1.3;
 } 
+
+.rich-note-view img {
+  display: inline-block;
+  max-width: 140px;
+  max-height: 140px;
+  margin: 0 8px 8px 0;
+  vertical-align: top;
+  object-fit: cover;
+  cursor: zoom-in;
+}
+
+
+/* .rich-note-view p:has(> img:only-child) {
+  display: inline-block;
+  margin: 0 8px 8px 0;
+  line-height: 0;
+  vertical-align: top;
+} */
+
+/* 
+.rich-note-view p:has(> img:only-child) img {
+  max-width: 140px;
+  max-height: 140px;
+  object-fit: cover;
+  margin: 0;           
+  border-radius: 4px;
+  transition: box-shadow .18s ease, transform .18s ease;
+} */
+/* 
+.rich-note-view p:has(> img:only-child) img:hover {
+  box-shadow: 0 0 0 2px #3b82f6aa;
+  transform: translateY(-2px);
+} */

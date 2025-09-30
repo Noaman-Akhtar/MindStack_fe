@@ -6,8 +6,9 @@ import { SidebarItem } from "./SidebarItem.js";
 import { assets } from "../../assets/assets.js";
 import { useNavigate } from "react-router-dom";
 import { LogOut } from "lucide-react";
+import { Random } from "../icons/Random.js";
 
-type Filter = "all" | "twitter" | "youtube";
+type Filter = "all" | "twitter" | "youtube"|'random';
 
 export function Sidebar({
     extended,
@@ -68,6 +69,10 @@ export function Sidebar({
                         className={active === "youtube" ? "bg-white/10" : ""}
                     >
                         <SidebarItem text="YouTube" icon={<YoutubeIcon />} />
+                    </div>
+                    <div onClick={() => onSelectType("random")}
+                        className={active === "random" ? "bg-white/10" : ""} >
+                        <SidebarItem text="Random" icon={<Random />} />
                     </div>
                 </div>
 
