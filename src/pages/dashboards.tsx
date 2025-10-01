@@ -125,7 +125,7 @@ const viewingContent = cards.find(c => c._id === viewingId) || null;
           />
         </div>
 
-        <div className={`flex flex-wrap items-start gap-6 px-2 py-3 ${extended ? "ml-7" : "ml-0"}`}>
+        <div className={`flex flex-wrap items-start gap-11 px-3 py-3 ${extended ? "ml-7" : "ml-0"}`}>
           {visibleCards.map(card => (
             <Card
   key={card._id}

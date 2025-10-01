@@ -44,7 +44,7 @@ export function Card({ _id, text, type, link, onDelete, note,onView,richNote,ric
 
 
     return ( //#303060
-        <div className="p-4 bg-[#303060] rounded-md transition-transform duration-300 ease-in-out transform hover:scale-106 shadow-md text-white border-gray-600 w-76 mt-8 border h-70 overflow-y-auto scrollbar-hidden">
+        <div className="p-4 bg-[#303060] rounded-md transition-transform duration-300 ease-in-out transform hover:scale-106 shadow-md text-white border-gray-600 w-72 mt-8 border h-70 overflow-y-auto scrollbar-hidden">
             <div className="flex justify-between">
                 <div className="flex items-center justify-center gap-1.5">
                     {type === "twitter" && <TwitterIcon />}{type === "youtube" && <YoutubeIcon />}
