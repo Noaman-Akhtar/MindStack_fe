@@ -7,7 +7,7 @@ const app = express();
 import { JWT_PASSWORD } from "./config";
 import { middleware } from "./middleware/auth";
 import { random } from "lodash";
-import { cloudinaryRouter } from "./utils/cloudinary";
+import cloudinaryRouter from './utils/cloudinary';
 
 const MAX_JSON_SIZE = process.env.MAX_JSON_SIZE || "1mb";
 app.use(express.json({ limit: MAX_JSON_SIZE }));
@@ -20,8 +20,7 @@ app.use(cors());
 //   }
 // }
 
-app.use("/api/v1/cloudinary",cloudinaryRouter);//importing upload route from cloudinary.ts 
-
+app.use('/api/v1/cloudinary', cloudinaryRouter);
 app.post("/api/v1/signup", async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
@@ -65,22 +64,30 @@ app.post("/api/v1/signin", async (req, res) => {
 });
 
 app.post("/api/v1/content", middleware, async (req, res) => {
-    const link = req.body.link;
-    const type = req.body.type;
-    const note = req.body.note;
-    await ContentModel.create({
-        link,
-        type,
-        note,
-        title: req.body.title,
-        richNoteDelta: req.body.richNoteDelta,
-
-        userId: req.userId,
-        tags: [],
-    });
-    res.json({
-        message: "Content created successfully",
-    });
+    const { link, type, note, title, richNoteDelta } = req.body;
+    const documents = req.body.documents;
+    // Runtime diagnostics to help debug incorrect payload shape
+    console.log("[CREATE_CONTENT] userId=", req.userId, "documents typeof=", typeof documents, Array.isArray(documents) ? `array(length=${documents.length})` : 'not-array');
+    try {
+        const doc = await ContentModel.create({
+            link,
+            type,
+            note,
+            title,
+            richNoteDelta,
+            documents: Array.isArray(documents) ? documents : (documents ? [documents] : []),
+            userId: req.userId,
+            tags: [],
+        });
+        res.json({
+            message: "Content created successfully",
+            id: doc._id
+        });
+    } catch (e:any) {
+        console.error("[CREATE_CONTENT][ERROR]", e?.message, e?.errors || e);
+        res.status(400).json({ message: "Content validation failed", error: e?.message, details: e?.errors });
+        return;
+    }
 });
 app.get("/api/v1/content", middleware, async (req, res) => {
     const userId = req.userId;
@@ -102,7 +109,7 @@ app.delete("/api/v1/content/:id", middleware, async (req, res) => {
 
 app.put("/api/v1/content/:id", middleware, async (req, res) => {
     const contentId = req.params.id;
-    const { title, link, type, note, richNoteDelta } = req.body;
+    const { title, link, type, note, richNoteDelta ,documents} = req.body;
     const doc = await ContentModel.findOne({
         _id: contentId,
         userId: req.userId,
@@ -116,7 +123,7 @@ app.put("/api/v1/content/:id", middleware, async (req, res) => {
     if (type !== undefined) doc.type = type;
     if (note !== undefined) doc.note = note;
     if (richNoteDelta !== undefined) doc.richNoteDelta = richNoteDelta;
-
+    if(documents !== undefined) doc.documents= documents;
     await doc.save();
     res.json({ message: "Content updated", content: doc });
 });

@@ -22,29 +22,33 @@ const UserSchema = new Schema({
 });
 export const UserModel = model('User', UserSchema);
 
+// Dedicated subdocument schema for uploaded documents (no _id needed per item)
+const DocumentSchema = new Schema({
+  name: { type: String, required: true },
+  url: { type: String, required: true },
+  type: { type: String, required: true },
+  size: { type: Number, required: true },
+  cloudinaryId: { type: String, required: true }
+}, { _id: false });
+
 const ContentSchema = new Schema({
-  type: String,
-  title: String,
-  link: String,
-  note: String,
-  richNoteDelta: Schema.Types.Mixed,
-  documents: [
-    {
-      name: String,
-      url: String,
-      type:String,
-      size:Number,
-      cloudinaryId:String
-      }
-  ],
-
-
+  type: { type: String },
+  title: { type: String },
+  link: { type: String },
+  note: { type: String },
+  richNoteDelta: { type: Schema.Types.Mixed },
+  documents: { type: [DocumentSchema], default: [] },
   tags: [{ type: mongoose.Schema.Types.ObjectId }],
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   createdAt:{type:Date,default:Date.now},
   updatedAt:{type:Date,default:Date.now}
 });
 
+// If the model was previously compiled with an incorrect schema (e.g., documents:String),
+// remove it so we can apply the corrected array-of-subdocuments schema.
+if (mongoose.models.Content) {
+  delete mongoose.models.Content;
+}
 export const ContentModel = model('Content', ContentSchema);
 
 

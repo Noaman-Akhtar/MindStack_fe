@@ -1,41 +1,16 @@
 
-import {v2 as cloudinary} from 'cloudinary'
-import multer from "multer";
-import express from "express";
-import dotenv from "dotenv";
-
+import { Router } from 'express';
+import { v2 as cloudinary } from 'cloudinary';
+import  dotenv  from 'dotenv';
+const cloudinaryRouter = Router();
 dotenv.config();
-export const upload = multer({dest:"uploads/"});
-
-cloudinary.config({
-    cloud_name:process.env.CLOUDINARY_CLOUD_NAME,
-    api_key:process.env.CLOUDINARY_API_KEY,
-    api_secret:process.env.CLOUDINARY_API_SECRET,
-
+cloudinaryRouter.post('/signature', async (req, res) => {
+  const timestamp = Math.floor(Date.now() / 1000);
+  const signature = cloudinary.utils.api_sign_request(
+    { timestamp },
+    process.env.CLOUDINARY_API_SECRET!
+  );
+  res.json({ timestamp, signature });
 });
 
-export const cloudinaryRouter = express.Router();
-
-cloudinaryRouter.post("/upload", upload.single("file"), async (req, res) => {
-    try {
-        if (!req.file) {
-            res.status(400).json({ error: "No file uploaded" });
-            return;
-        }
-
-        const result = await cloudinary.uploader.upload(req.file.path, {
-            folder: "second-brain",
-            resource_type: "auto",
-        });
-
-        res.json({
-            url: result.secure_url,
-            public_id: result.public_id,
-            format: result.format,
-            resource_type: result.resource_type,
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Cloudinary upload failed" });
-    }
-});
+export default cloudinaryRouter;
