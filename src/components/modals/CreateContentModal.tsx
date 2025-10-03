@@ -8,7 +8,7 @@ import axios from "axios";
 import { RichTextEditor } from "../../utils/RichTextEditor/RichtextEditor";
 import { MultiUploader } from "../../utils/FileUpload/uploaderUi";
 
-// state for documents you’ll send with content:
+
 
 enum ContentType {
     Youtube = "youtube",
@@ -127,7 +127,7 @@ export function CreateContentModal({
                     <div className="mt-4">
                         <MultiUploader
                             onComplete={(docs) => {
-                                setDocuments(docs); // replace or merge depending on UX
+                                setDocuments(docs); 
                             }}
                         />
                     </div>

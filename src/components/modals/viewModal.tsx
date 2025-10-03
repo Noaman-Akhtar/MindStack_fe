@@ -22,10 +22,10 @@ export function ViewContentModal({
     onClose,
     onUpdated,
 }: ViewContentModalProps) {
-    const { _id, title, richNoteDelta } = content; // removed unused: type, link, note
+    const { _id, title, richNoteDelta } = content;
     const [editMode, setEditMode] = useState(false);
     const [delta, setDelta] = useState<any>(richNoteDelta || null);
-    // html state is only for edit mode live preview; for view mode we derive from delta
+    
     const [html, setHtml] = useState("");
 
     // When a different content object is provided, sync local state (especially if modal reused)
