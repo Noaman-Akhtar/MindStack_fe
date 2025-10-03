@@ -5,7 +5,10 @@ import { Input } from "../ui/Input";
 import { BACKEND_URL } from "../../config";
 import { getYouTubeId, isValidTwitterUrl } from "../../utils/embed";
 import axios from "axios";
-import { RichTextEditor } from "../ui/RichTextEditor/RichtextEditor";
+import { RichTextEditor } from "../../utils/RichTextEditor/RichtextEditor";
+import { MultiUploader } from "../../utils/FileUpload/uploaderUi";
+
+// state for documents you’ll send with content:
 
 enum ContentType {
     Youtube = "youtube",
@@ -22,13 +25,17 @@ export function CreateContentModal({
     onClose,
     onContentAdded,
 }: CreateContentModalProps) {
-    const [richNote,setRichNote] = useState("");
-    const [richNoteDelta,setRichNoteDelta] = useState<any>(null);
+    const [richNote, setRichNote] = useState("");
+    const [richNoteDelta, setRichNoteDelta] = useState<any>(null);
     const titleref = useRef<HTMLInputElement>(null);
     const linkref = useRef<HTMLInputElement>(null);
     const [type, setType] = useState<ContentType | null>(null);
     const [menuOpen, setMenuOpen] = useState(false);
     const noteRef = useRef<HTMLTextAreaElement>(null);
+
+    const [documents, setDocuments] = useState<
+        { name: string; url: string; type: string; size: number; cloudinaryId: string }[]
+    >([]);
 
     const [typeError, setTypeError] = useState<string | null>(null);
     const typeOptions: { label: string; value: ContentType }[] = [
@@ -67,7 +74,8 @@ export function CreateContentModal({
                     type,
                     note,
                     richNote,
-                    richNoteDelta
+                    richNoteDelta,
+                    documents
                 },
                 {
                     headers: {
@@ -87,7 +95,7 @@ export function CreateContentModal({
         <div className="flex flex-col justify-center relative">
             <div
                 className="bg-white p-10 w-250px rounded-md max-h-[calc(110vh-4rem)] overflow-y-auto max-w-[95vw]"
-                onClick={(e) => e.stopPropagation()} 
+                onClick={(e) => e.stopPropagation()}
             >
                 <div className="absolute top-[1%] right-[1%] cursor-pointer" onClick={onClose}>
                     <CrossIcon />
@@ -114,9 +122,15 @@ export function CreateContentModal({
                         ></textarea>
                     </div>
                     <div className="mt-2 focus:ring-2 focus:black focus:border-transparent">
-                        <RichTextEditor onDeltaChange={setRichNoteDelta} onHtmlChange={setRichNote}/>
+                        <RichTextEditor onDeltaChange={setRichNoteDelta} onHtmlChange={setRichNote} />
                     </div>
-                    
+                    <div className="mt-4">
+                        <MultiUploader
+                            onComplete={(docs) => {
+                                setDocuments(docs); // replace or merge depending on UX
+                            }}
+                        />
+                    </div>
 
                     <div className="relative mt-2 flex justify-center ">
                         <div onClick={() => setMenuOpen((v) => !v)}>

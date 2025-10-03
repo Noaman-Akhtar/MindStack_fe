@@ -6,7 +6,7 @@ import {
     getYouTubeEmbedUrl,
     normalizeTwitterUrl,
 } from "../../utils/embed";
-import { RichTextEditor } from "../ui/RichTextEditor/RichtextEditor";
+import { RichTextEditor } from "../../utils/RichTextEditor/RichtextEditor";
 import Quill from "quill";
 import axios from "axios";
 import { BACKEND_URL } from "../../config";
@@ -37,7 +37,7 @@ export function ViewContentModal({
     const [saving, setSaving] = useState(false);
     const [lightboxImg, setLightboxImg] = useState<string | null>(null);
 
-   
+
     // Helper to convert delta -> HTML (for view mode) without storing richNote on backend
     const deltaToHtml = useCallback((d: any): string => {
         if (!d) return "";
@@ -56,7 +56,7 @@ export function ViewContentModal({
         return base ? DOMPurify.sanitize(base, { USE_PROFILES: { html: true } }) : "";
     }, [html, delta, editMode, deltaToHtml]);
 
-   
+
     useEffect(() => {
         const container = document.getElementById("rich-note-view");
         if (!container) return;
@@ -179,6 +179,47 @@ export function ViewContentModal({
                         alt="enlarged"
                         className="max-w-[90vw] max-h-[90vh] object-contain rounded shadow-xl"
                     />
+                </div>
+            )}
+            {content.documents?.length > 0 && !editMode && (
+                <div className="mt-6">
+                    <h3 className="font-medium mb-2">Documents</h3>
+                    <ul className="space-y-1 text-sm">
+                        {content.documents.map((doc: any) => {
+                            const ext = (doc.name || "").split(".").pop()?.toUpperCase();
+                            const isImg = /^image\//.test(doc.type);
+                            return (
+                                <li key={doc.cloudinaryId} className="flex items-center gap-3">
+                                    {isImg ? (
+                                        <img
+                                            src={doc.url}
+                                            alt={doc.name}
+                                            className="w-12 h-12 object-cover rounded cursor-zoom-in"
+                                            onClick={() => setLightboxImg(doc.url)}
+                                        />
+                                    ) : (
+                                        <div className="w-12 h-12 flex items-center justify-center bg-gray-200 text-gray-700 rounded text-xs font-medium">
+                                            {ext || "DOC"}
+                                        </div>
+                                    )}
+                                    <div className="flex-1 min-w-0">
+                                        <div className="truncate">{doc.name}</div>
+                                        <div className="text-xs text-gray-500">
+                                            {(doc.size / 1024).toFixed(1)} KB
+                                        </div>
+                                    </div>
+                                    <a
+                                        href={doc.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-blue-600 underline text-xs"
+                                    >
+                                        open
+                                    </a>
+                                </li>
+                            );
+                        })}
+                    </ul>
                 </div>
             )}
         </div>
