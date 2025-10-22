@@ -13,15 +13,15 @@ export const middleware = (req: Request, res: Response, next: NextFunction): voi
     
     if (!token) {
         res.status(403).json({ message: "Unauthorized" });
-        return;  // Just return without returning the response object
+        return;  
     }
 
     try {
         const decoded = jwt.verify(token, JWT_PASSWORD!) as { id: string };
         req.userId = decoded.id;
-        next();  // Properly call next() without returning anything
+        next();  
     } catch {
         res.status(403).json({ message: "Invalid token" });
-        // No return needed here either
+        
     }
 };

@@ -1,10 +1,7 @@
 import mongoose, { Schema, model } from 'mongoose';
 import dotenv from 'dotenv';
 dotenv.config();
-interface IUser {
-  name: string;
-  password: string;
-}
+
 if (!process.env.DATABASE_URL) {
   throw new Error("MongoDB_URL environment variable is missing!");
 }
@@ -18,11 +15,11 @@ mongoose.connection.on('error', (err) => {
 });
 const UserSchema = new Schema({
   name: { type: String, required: true },
-  password: { type: String, required: true },
+  password: { type: String, required: true},
 });
 export const UserModel = model('User', UserSchema);
 
-// Dedicated subdocument schema for uploaded documents (no _id needed per item)
+
 const DocumentSchema = new Schema({
   name: { type: String, required: true },
   url: { type: String, required: true },
@@ -44,8 +41,7 @@ const ContentSchema = new Schema({
   updatedAt:{type:Date,default:Date.now}
 });
 
-// If the model was previously compiled with an incorrect schema (e.g., documents:String),
-// remove it so we can apply the corrected array-of-subdocuments schema.
+
 if (mongoose.models.Content) {
   delete mongoose.models.Content;
 }

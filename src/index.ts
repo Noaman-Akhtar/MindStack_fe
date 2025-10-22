@@ -67,7 +67,7 @@ app.post("/api/v1/content", middleware, async (req, res) => {
     const { link, type, note, title, richNoteDelta } = req.body;
     const documents = req.body.documents;
     // Runtime diagnostics to help debug incorrect payload shape
-    console.log("[CREATE_CONTENT] userId=", req.userId, "documents typeof=", typeof documents, Array.isArray(documents) ? `array(length=${documents.length})` : 'not-array');
+    // console.log("[CREATE_CONTENT] userId=", req.userId, "documents typeof=", typeof documents, Array.isArray(documents) ? `array(length=${documents.length})` : 'not-array');
     try {
         const doc = await ContentModel.create({
             link,
@@ -84,7 +84,7 @@ app.post("/api/v1/content", middleware, async (req, res) => {
             id: doc._id
         });
     } catch (e:any) {
-        console.error("[CREATE_CONTENT][ERROR]", e?.message, e?.errors || e);
+        // console.error("[CREATE_CONTENT][ERROR]", e?.message, e?.errors || e);
         res.status(400).json({ message: "Content validation failed", error: e?.message, details: e?.errors });
         return;
     }
