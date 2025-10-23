@@ -8,6 +8,9 @@ import { JWT_PASSWORD } from "./config";
 import { middleware } from "./middleware/auth";
 import { random } from "lodash";
 import cloudinaryRouter from './utils/cloudinary';
+import { upsertToPinecone, deleteFromPinecone, searchInPinecone } from './utils/pinecone';
+import { buildEmbeddingText } from "./utils/textExtractor";
+import { Pinecone } from "@pinecone-database/pinecone";
 
 const MAX_JSON_SIZE = process.env.MAX_JSON_SIZE || "1mb";
 app.use(express.json({ limit: MAX_JSON_SIZE }));
@@ -79,11 +82,29 @@ app.post("/api/v1/content", middleware, async (req, res) => {
             userId: req.userId,
             tags: [],
         });
+
+        const embeddingText = buildEmbeddingText({
+            title,
+            note,
+            richNoteDelta,
+            documents: Array.isArray(documents) ? documents : (documents ? [documents] : []),
+        });
+
+        await upsertToPinecone({
+            userId: req.userId!,
+            contentId: doc._id.toString(),
+            embeddingText: embeddingText,
+            metadata: {
+                title,
+                type
+            }
+        });
+
         res.json({
             message: "Content created successfully",
             id: doc._id
         });
-    } catch (e:any) {
+    } catch (e: any) {
         // console.error("[CREATE_CONTENT][ERROR]", e?.message, e?.errors || e);
         res.status(400).json({ message: "Content validation failed", error: e?.message, details: e?.errors });
         return;
@@ -104,12 +125,16 @@ app.delete("/api/v1/content/:id", middleware, async (req, res) => {
         _id: contentId,
         userId: req.userId,
     });
+    deleteFromPinecone(req.userId!,contentId).catch(err =>{
+        console.error('Failed to delete from Pinecone',err);
+    });
+
     res.json({ message: "Content deleted successfully" });
 });
 
 app.put("/api/v1/content/:id", middleware, async (req, res) => {
     const contentId = req.params.id;
-    const { title, link, type, note, richNoteDelta ,documents} = req.body;
+    const { title, link, type, note, richNoteDelta, documents } = req.body;
     const doc = await ContentModel.findOne({
         _id: contentId,
         userId: req.userId,
@@ -123,10 +148,82 @@ app.put("/api/v1/content/:id", middleware, async (req, res) => {
     if (type !== undefined) doc.type = type;
     if (note !== undefined) doc.note = note;
     if (richNoteDelta !== undefined) doc.richNoteDelta = richNoteDelta;
-    if(documents !== undefined) doc.documents= documents;
+    if (documents !== undefined) doc.documents = documents;
     await doc.save();
+    //for pinecone embedding text updating 
+    const embeddingText = buildEmbeddingText({
+        title: doc.title ?? undefined,
+        note: doc.note ?? undefined,
+        richNoteDelta: doc.richNoteDelta,
+        documents: doc.documents,
+    });
+
+    await upsertToPinecone({
+        userId: req.userId!,
+        contentId: doc._id.toString(),
+        embeddingText: embeddingText,
+        metadata: {
+            title: doc.title || 'Untitled',
+            type: doc.type || 'random'
+        }
+    });
     res.json({ message: "Content updated", content: doc });
 });
+
+app.post("/api/v1/search",middleware,async(req,res)=>{
+    const {query} = req.body;
+    if(!query || !query.trim()){
+     res.status(400).json({error:'Query is required'});
+     return;
+    }
+    try{
+        const pineconeResults = await searchInPinecone(req.userId!,query);
+        console.log(`Found ${pineconeResults.length} Pinecone results`);
+
+        if(pineconeResults.length ===0){
+             res.json({results:[]});
+             return;
+        }
+
+        const contentIds = pineconeResults.map((result: any) => result.id);
+
+        const contents = await ContentModel.find({
+            _id:{ $in: contentIds},
+            userId: req.userId,
+        });
+
+        const resultsWithScores = contents.map(doc => {
+            const pineconeResult = pineconeResults.find((r:any) => r.id === doc._id.toString());
+            return {
+                _id: doc._id,
+                title: doc.title,
+                link: doc.link,
+                type: doc.type,
+                note: doc.note,
+                richNoteDelta: doc.richNoteDelta,
+                documents: doc.documents,
+                createdAt: doc.createdAt,
+                score: pineconeResult?._score || 0,
+            };
+        });
+        resultsWithScores.sort((a,b)=>(b.score-a.score));
+
+        res.json({
+            results:resultsWithScores,
+            count:resultsWithScores.length,
+            query:query,
+        });
+    return ;
+    } catch(error:any){
+        console.error("Search Error:",error);
+        res.status(500).json({
+            error:'Search failed',
+            details:error.message
+            
+        });
+        return;
+    }
+})
 
 app.post("/api/v1/brain/share", middleware, async (req, res) => {
     const share = req.body.share;

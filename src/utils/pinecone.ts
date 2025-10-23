@@ -37,7 +37,7 @@ export async function upsertToPinecone(
   const namespace = await getUserNamespace(props.userId);
 
   await namespace.upsertRecords([
-    {
+    {   userId:props.userId,
         id:props.contentId,
         text:props.embeddingText,
         title:props.metadata.title,
@@ -61,5 +61,34 @@ topK:number = 10
 ){
     try{
         const namespace = await getUserNamespace(userId);
+        
+        const searchResults = await namespace.searchRecords({
+            query:{
+                topK: topK,
+                inputs:{text:query}
+            },
+           fields: ['title','type'], 
+        });
+        return searchResults.result.hits || [] ;
+    } catch (error: any) {
+        console.error('Search error', error);
+        throw error;
     }
+}
+
+export async function deleteFromPinecone(userId:string , contentId:string){
+    try{
+        const indexDescription = await pc.describeIndex(indexName);
+        const indexHost =indexDescription.host;
+        const index = pc.index(indexName,indexHost);
+
+        await index.namespace(`user-${userId}`).deleteOne(contentId);
+        return true;
+    }
+    catch(error){
+        console.error('Pinecone delete error',error);
+        throw error;
+    }
+
+
 }
