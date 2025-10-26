@@ -6,10 +6,7 @@ import axios from "axios";
 
 interface SearchResult {
   _id: string;
-  title: string;
-  type: string;
   score: number;
-  note?: string;
 }
 
 interface SearchContentModelProps {

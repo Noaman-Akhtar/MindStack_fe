@@ -23,7 +23,7 @@ type Content = {
   link: string;
   type: "twitter" | "youtube";
   note?: string;
-  score?: number;
+  score: number | undefined;
 };
 
 function Dashboard() {
@@ -66,10 +66,20 @@ function Dashboard() {
     }
   };
 
-  const handleSearchComplete = (query: string, results: Content[]) => {
+  const handleSearchComplete = (query: string, results: Array<{_id:string;score?:number}>) => {
     setSearchMode(true);
     setSearchQuery(query);
-    setSearchResults(results);
+     const byId = new Map(cards.map(c => [String(c._id), c]));
+
+    // Preserve Pinecone order: walk results in order and pick matching cards
+    const ranked = results
+      .map(r => {
+        const card = byId.get(String(r._id));
+        return card ? { ...card, score: r.score } : null;
+      })
+      .filter((c): c is Content => !!c);
+
+    setSearchResults(ranked);
     setSearch(false);
   };
 
