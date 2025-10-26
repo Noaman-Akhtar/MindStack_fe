@@ -58,7 +58,7 @@ export const RichTextEditor = ({
   }
     return (
        <div
-        className={`rounded-md p-2 border border-gray-300 focus-within:ring-2 focus-within:ring-black ${readOnly ? 'opacity-80 pointer-events-none select-none' : ''} ${className}`}
+        className={`p-2 outline-none rounded-md bg-gray-100 border-[1.3px] border-gray-300 focus-within:border-purple-900/60 ${readOnly ? 'opacity-80 pointer-events-none select-none' : ''} ${className}`}
         tabIndex={0}
         onMouseDown={(e) => {
           // Only focus when clicking the chrome, let Quill manage clicks inside editor

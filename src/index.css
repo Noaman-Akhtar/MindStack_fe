@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
 
-:root {
+/* :root {
   
   font-size: 12px;
-}
+} */
 
-
+/* 
 html, body, #root {
   height: 100%;
-}
+} */
 
 :root {
   --color-purple-300: #2D2B55;
@@ -69,25 +69,3 @@ html, body, #root {
   cursor: zoom-in;
 }
 
-
-/* .rich-note-view p:has(> img:only-child) {
-  display: inline-block;
-  margin: 0 8px 8px 0;
-  line-height: 0;
-  vertical-align: top;
-} */
-
-/* 
-.rich-note-view p:has(> img:only-child) img {
-  max-width: 140px;
-  max-height: 140px;
-  object-fit: cover;
-  margin: 0;           
-  border-radius: 4px;
-  transition: box-shadow .18s ease, transform .18s ease;
-} */
-/* 
-.rich-note-view p:has(> img:only-child) img:hover {
-  box-shadow: 0 0 0 2px #3b82f6aa;
-  transform: translateY(-2px);
-} */

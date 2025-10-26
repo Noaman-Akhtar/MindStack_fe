@@ -17,7 +17,7 @@ export function Input(props: InputProps) {
             ref={props.ref}
                 placeholder={props.placeholder} 
                 type={props.type} 
-                className={"w-full tracking-wider border border-purple-400/10 focus:border-purple-900/30 rounded h-13 pl-3 py-2  text-xl placeholder:italic transition-colors duration-200"+" "+variantStyles[props.variant]}
+                className={"w-full tracking-wider outline-none border-[1.3px] border-gray-300 focus:border-purple-900/60 rounded h-10 pl-3 py-1 text-l placeholder:italic transition-colors duration-200"+" "+variantStyles[props.variant]}
 style={props.height?{height:props.height}:undefined}
             />
         </div>

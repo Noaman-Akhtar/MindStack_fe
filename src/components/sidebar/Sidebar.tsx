@@ -31,27 +31,27 @@ export function Sidebar({
     return (
         <>
             <div
-                className={`h-screen bg-[#2D2B55] text-[#C4C2FF] border-r border-amber-50/10 w-72 fixed left-0 top-0 z-40 transition-transform duration-300 ${extended ? "translate-x-0" : "-translate-x-full"
+                className={`h-screen bg-[#2D2B55] text-[#C4C2FF] border-r border-amber-50/10 sm:w-[21vw] w-full fixed left-0 top-0 z-40 transition-transform duration-300 ${extended ? "translate-x-0" : "-translate-x-full"
                     } flex flex-col`}
             >
 
-                <div className="flex items-center px-4 py-1 gap-3 ">
+               {extended && <div className="flex items-center px-3 py-1 gap-3 ">
                     <img
                         onClick={() => setExtended(!extended)}
-                        className="cursor-pointer w-8 h-8 bg-[#3E3B6D] hover:bg-[#4D4A80] rounded-full shadow-md p-1 fixed transition-colors duration-300 left-60"
+                        className="cursor-pointer  w-7 h-7 bg-[#3E3B6D] hover:bg-[#4D4A80] rounded-full shadow-md p-1 z-0 absolute transition-colors duration-300 flex  top-5 right-4"
                         src={assets.menu_icon}
                         alt="menu"
                     />
                     <div className="flex items-center gap-3">
                         <div className="mt-1">
-                            <Logo />
+                            <Logo/>
                         </div>
-                        <span className="text-2xl font-bold">MindStack</span>
+                        <span className="block sm:hidden xl:block text-2xl font-bold">MindStack</span>
                     </div>
-                </div>
+                </div>}
 
 
-                <div className="mt-6 space-y-2 flex-1">
+                <div className="mt-4  flex-1">
                     <div
                         onClick={() => onSelectType("all")}
                         className={active === "all" ? "bg-white/10" : ""}
@@ -86,7 +86,7 @@ export function Sidebar({
             {!extended && (
                 <img
                     onClick={() => setExtended(true)}
-                    className="cursor-pointer w-8 h-8 bg-[#2D2B55] hover:bg-[#3E3B6D] rounded-full shadow-md p-1 fixed top-5 left-4 z-30 transition-all duration-300"
+                    className="cursor-pointer  w-8 h-8 bg-[#2D2B55] hover:bg-[#3E3B6D] rounded-full shadow-md p-1 absolute top-5 left-4  transition-all duration-300"
                     src={assets.menu_icon}
                     alt="menu"
                 />

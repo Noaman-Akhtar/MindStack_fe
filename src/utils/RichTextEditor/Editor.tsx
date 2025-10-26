@@ -90,7 +90,7 @@ const Editor = forwardRef<Quill | null, EditorProps>(
       };
     }, [ref]);
 
-    return <div ref={containerRef} className="h-full" />; // was min-h, use h-full
+    return <div ref={containerRef} className="h-full " />; // was min-h, use h-full
   },
 );
 

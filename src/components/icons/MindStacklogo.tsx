@@ -1,6 +1,6 @@
 export function Logo(){
     return <>
-    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 154 84" fill="none">
+    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 154 84" fill="none">
   <g filter="url(#filter0_d_1_58)">
     <path d="M43.3367 2.417L104.87 34.8524L149.812 67.4376L102.346 0.273162L45.9351 38.0275L4 75.2931L43.3367 2.417Z" fill="#9A43DA"/>
   </g>

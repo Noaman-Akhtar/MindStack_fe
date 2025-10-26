@@ -8,6 +8,7 @@ interface ButtonProps {
   endIcon?: ReactNode;
   onClick?: () => void;
   loading?: boolean;
+  disabled?: boolean;
 }
 
 const variantStyles = {
@@ -16,8 +17,8 @@ const variantStyles = {
 };
 
 const sizeStyles = {
-  sm: "py-1 px-3 text-sm",
-  md: "py-2 px-4 text-base",
+  sm: "py-1 sm:px-3 px-1 sm:text-sm text-xs",
+  md: "py-1.5 sm:px-3  sm:text-base text-xs",
   lg: "py-3 px-6 text-lg",
   full: "w-full flex justify-center items-center h-12 text-base",
 };
