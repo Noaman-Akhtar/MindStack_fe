@@ -24,6 +24,7 @@ app.use(cors());
 // }
 
 app.use('/api/v1/cloudinary', cloudinaryRouter);
+
 app.post("/api/v1/signup", async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
@@ -180,51 +181,28 @@ app.post("/api/v1/search",middleware,async(req,res)=>{
         const pineconeResults = await searchInPinecone(req.userId!,query);
         console.log(`Found ${pineconeResults.length} Pinecone results`);
 
-        if(pineconeResults.length ===0){
+        if(pineconeResults.length === 0){
              res.json({results:[]});
              return;
-        }
+        }  
 
-        const contentIds = pineconeResults.map((result: any) => result.id);
+       
+const results = pineconeResults
+      .map((h: any) => ({
+        _id: String(h.id ?? h._id),
+        score: Number(h.score ?? h._score),
+      }))
+      .filter(r => r._id && !Number.isNaN(r.score));
 
-        const contents = await ContentModel.find({
-            _id:{ $in: contentIds},
-            userId: req.userId,
-        });
-
-        const resultsWithScores = contents.map(doc => {
-            const pineconeResult = pineconeResults.find((r:any) => r.id === doc._id.toString());
-            return {
-                _id: doc._id,
-                title: doc.title,
-                link: doc.link,
-                type: doc.type,
-                note: doc.note,
-                richNoteDelta: doc.richNoteDelta,
-                documents: doc.documents,
-                createdAt: doc.createdAt,
-                score: pineconeResult?._score || 0,
-            };
-        });
-        resultsWithScores.sort((a,b)=>(b.score-a.score));
-
-        res.json({
-            results:resultsWithScores,
-            count:resultsWithScores.length,
-            query:query,
-        });
-    return ;
-    } catch(error:any){
-        console.error("Search Error:",error);
-        res.status(500).json({
-            error:'Search failed',
-            details:error.message
-            
-        });
-        return;
-    }
-})
-
+    res.json({ results, count: results.length, query });
+    return;
+  } catch (error: any) {
+    console.error("Search Error:", error);
+    res.status(500).json({ error: "Search failed", details: error.message });
+    return;
+  }
+});
+// ...exis
 app.post("/api/v1/brain/share", middleware, async (req, res) => {
     const share = req.body.share;
     if (share) {

@@ -62,14 +62,18 @@ topK:number = 10
     try{
         const namespace = await getUserNamespace(userId);
         
+              console.log(`Searching in namespace: user-${userId} with query: ${query}`);
+
         const searchResults = await namespace.searchRecords({
             query:{
                 topK: topK,
                 inputs:{text:query}
             },
-           fields: ['title','type'], 
+           fields: ['title','type'],
+            
         });
-        return searchResults.result.hits || [] ;
+                console.log(`Search results:`, searchResults.result.hits);
+        return searchResults.result.hits;
     } catch (error: any) {
         console.error('Search error', error);
         throw error;

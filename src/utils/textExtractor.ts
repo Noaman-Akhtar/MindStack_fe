@@ -2,7 +2,7 @@ export function extractTextFromDelta(delta:any) :string{
     if(!delta || !delta.ops || !Array.isArray(delta.ops)){
         return '';
     }
-    return delta.ops .maps((op:any)=>{
+    return delta.ops.map((op:any)=>{
         if(typeof op.insert === 'string'){
             return op.insert;
         }
