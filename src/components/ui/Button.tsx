@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 interface ButtonProps {
   variant: "primary" | "secondary";
   size: "sm" | "md" | "lg" | "full";
-  text: string;
+  text?: string;
   startIcon?: ReactNode;
   endIcon?: ReactNode;
   onClick?: () => void;

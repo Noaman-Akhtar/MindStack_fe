@@ -30,12 +30,12 @@ export function Signin() {
     return (
         <div className=" signup-bg h-screen w-screen bg-black flex justify-center items-center">
             <div className="blur-ellipse"></div>
-            <div className="fixed max-w-96 h-80 m-2 w-full border border-gray-300/20 shadow-md bg-[#303060]/20 rounded-lg p-6 ">
-                <div className="flex flex-col  mt-8 gap-y-6">
+            <div className="fixed max-w-82 h-82 m-2 w-full border border-gray-300/20 shadow-md bg-[#303060]/20 rounded-lg p-6 ">
+                <div className="flex flex-col  mt-6 gap-y-10">
                     <Input variant="secondary" ref={usernameRef} placeholder="UserName" type="text" />
                     <Input variant="secondary" ref={passwordRef} placeholder="Password" type="password" />
                 </div>
-                <div className="flex justify-center items-center mt-15">
+                <div className="flex justify-center items-center mt-25">
                     <Button variant="primary" text="Signin" size="full" onClick={signin} loading={false} />
                 </div>
             </div>

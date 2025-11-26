@@ -172,12 +172,12 @@ function Dashboard() {
             startIcon={<PlusIcon size="md" />}
             onClick={() => setModalOpen(true)}
           />
-          <Button
+          {/* <Button
             variant="secondary"
             size="md"
             text="Share Brain"
             startIcon={<ShareIcon size="md" />}
-          />
+          /> */}
           <Button
             variant="secondary"
             size="md"
