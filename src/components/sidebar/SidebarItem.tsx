@@ -2,7 +2,7 @@ import { useState, type Component, type ComponentType, type ReactElement, type R
 
 export function SidebarItem({text,icon}:{
     text:string;
-    icon:ReactElement;
+    icon?:ReactElement;
 }){
     
     return <div className="flex items-center pl-3 gap-3 text-l cursor-pointer hover:bg-gray-700 px-3 py-3 ">

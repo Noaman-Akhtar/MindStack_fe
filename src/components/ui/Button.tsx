@@ -18,7 +18,7 @@ const variantStyles = {
 
 const sizeStyles = {
   sm: "py-1 sm:px-3 px-1 sm:text-sm text-xs",
-  md: "py-1.5 sm:px-3  sm:text-base text-xs",
+  md: "py-1.5 sm:px-3 px-1 sm:text-base text-xs",
   lg: "py-3 px-6 text-lg",
   full: "w-full flex justify-center items-center h-12 text-base",
 };

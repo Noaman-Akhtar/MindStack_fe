@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "../ui/Button";
 import { useRef, useState } from "react";
 import { BACKEND_URL } from "../../config";
@@ -22,6 +22,20 @@ export function SearchContentModel({
 }: SearchContentModelProps) {
   const queryRef = useRef<HTMLTextAreaElement>(null);
   const [loading, setLoading] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  useEffect(() => {
+    if(isExpanded){
+      queryRef.current?.focus();
+    }
+  }, [isExpanded]);
+
+  useEffect(() => {
+    if (open) {
+      setIsExpanded(true)
+    } else {
+      setIsExpanded(false);
+    }}, [open]);
 
   const handleSearch = async () => {
     const query = queryRef.current?.value.trim() ?? "";
@@ -63,24 +77,25 @@ export function SearchContentModel({
   if (!open) return null;
 
   return (
-    <div
-      className="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
+      <div
+      className="fixed inset-0 bg-black/40 z-50"
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-lg p-6 w-[500px] max-h-[80vh] overflow-y-auto"
+        className={`bg-[#0F0F1A] rounded-lg p-4 sm:w-[200px] md:w-[400px] lg:w-[500px] mx-auto mt-  transition-all duration-300 ease-in-out ${
+          isExpanded ? "  opacity-100" : "max-h-0 opacity-0"
+        }`}
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-2xl font-bold mb-4">Search Content</h2>
         <textarea
           ref={queryRef}
           placeholder="Search for anything... (e.g., 'react hooks tutorial')"
-          className="w-full p-2 rounded-md text-md placeholder:italic outline-none border-[1.3px] bg-gray-100 border-gray-400 focus:border-purple-900/60"
+          className="w-full p-2 rounded-md text-md placeholder:italic placeholder-[#d5d4eb] outline-none border-[1.3px] bg-[#0F0F1A] text-[#d5d4eb] border-gray-400 focus:border-gray-600/60"
           rows={3}
           onKeyDown={handleKeyDown}
         />
 
-        <div className="flex gap-2 mb-4">
+        <div className="flex gap-2 mt-4">
           <Button
             variant="primary"
             size="md"

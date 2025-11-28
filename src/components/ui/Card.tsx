@@ -58,7 +58,7 @@ export function Card({
 
     return (
         //#303060
-        <div className=" relative group p-3 bg-[#303060] rounded-md transition-transform duration-300 ease-in-out transform hover:scale-106 shadow-md text-white border-gray-600 md:w-[calc(20vw-0.1rem)] w-65 mt-6 border h-50 md:h-65 overflow-y-auto scrollbar-hidden">
+        <div className=" relative group p-3 bg-[#303060] rounded-md transition-transform duration-300 ease-in-out transform hover:scale-106 shadow-md text-white border-gray-600 w-full mt-6 border h-50 md:h-65 overflow-y-auto scrollbar-hidden">
             {/* Search Score Badge */}
             {searchScore !== undefined && (
                 <div className="absolute top-1 left-1 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-bold z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
