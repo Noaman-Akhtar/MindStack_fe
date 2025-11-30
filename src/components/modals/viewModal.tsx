@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, useCallback } from "react";
 import DOMPurify from "dompurify";
 import { CrossIcon } from "../icons/CrossIcon";
 import { RichTextEditor } from "../../utils/RichTextEditor/RichtextEditor";
+import { MultiUploader } from "../../utils/FileUpload/uploaderUi";
 import Quill from "quill";
 import axios from "axios";
 import { BACKEND_URL } from "../../config";
@@ -19,6 +20,7 @@ export function ViewContentModal({
 }: ViewContentModalProps) {
   const { _id, title, richNoteDelta } = content;
   const [editMode, setEditMode] = useState(false);
+  const [showUploader, setShowUploader] = useState(false);
   const [delta, setDelta] = useState<any>(richNoteDelta || null);
 
   const [html, setHtml] = useState("");
@@ -84,6 +86,43 @@ export function ViewContentModal({
     }
   }
 
+  async function handleUploadComplete(newDocs: any[]) {
+    const existingDocs = content.documents || [];
+    const updatedDocs = [...existingDocs, ...newDocs];
+
+    try {
+      const { data } = await axios.put(
+        `${BACKEND_URL}/api/v1/content/${_id}`,
+        { documents: updatedDocs },
+        { headers: { Authorization: localStorage.getItem("token") } }
+      );
+      onUpdated?.(data.content);
+      setShowUploader(false);
+    } catch (e) {
+      console.error("Failed to upload docs", e);
+      alert("Failed to update documents.");
+    }
+  }
+
+  async function deleteDocument(docId: string) {
+    if (!window.confirm("Are you sure you want to delete this document?")) return;
+
+    const existingDocs = content.documents || [];
+    const updatedDocs = existingDocs.filter((d: any) => d.cloudinaryId !== docId);
+
+    try {
+      const { data } = await axios.put(
+        `${BACKEND_URL}/api/v1/content/${_id}`,
+        { documents: updatedDocs },
+        { headers: { Authorization: localStorage.getItem("token") } }
+      );
+      onUpdated?.(data.content);
+    } catch (e) {
+      console.error("Failed to delete doc", e);
+      alert("Failed to delete document.");
+    }
+  }
+
   return (
     <div
       className="relative bg-white rounded-md p-6 w-[min(800px,80vw)] max-h-[calc(100vh-3rem)] overflow-auto"
@@ -100,13 +139,21 @@ export function ViewContentModal({
       <div className="flex justify-between items-start gap-4 mb-4">
         <h2 className="text-xl font-semibold">{title}</h2>
         <div className="flex gap-2">
-          {!editMode && (
-            <button
-              className="px-3 mr-5 py-1 text-sm rounded bg-blue-600 text-white hover:bg-blue-500"
-              onClick={() => setEditMode(true)}
-            >
-              Edit
-            </button>
+          {!editMode && !showUploader && (
+            <>
+              <button
+                className="px-3 py-1 text-sm rounded bg-blue-600 text-white hover:bg-blue-500"
+                onClick={() => setEditMode(true)}
+              >
+                Edit
+              </button>
+              <button
+                className="px-3 mr-5 py-1 text-sm rounded bg-green-600 text-white hover:bg-green-500"
+                onClick={() => setShowUploader(true)}
+              >
+                Add Docs
+              </button>
+            </>
           )}
           {editMode && (
             <>
@@ -133,6 +180,21 @@ export function ViewContentModal({
           )}
         </div>
       </div>
+
+      {showUploader && (
+        <div className="mb-4 p-4 border border-gray-200 rounded bg-gray-50">
+          <div className="flex justify-between items-center mb-3">
+            <h3 className="font-medium">Upload Documents</h3>
+            <button
+              onClick={() => setShowUploader(false)}
+              className="text-sm text-gray-500 hover:text-gray-700"
+            >
+              Cancel
+            </button>
+          </div>
+          <MultiUploader onComplete={handleUploadComplete} />
+        </div>
+      )}
 
       {/* Rich Note View or Edit */}
       {!editMode && (
@@ -213,6 +275,12 @@ export function ViewContentModal({
                   >
                     open
                   </a>
+                  <button
+                    onClick={() => deleteDocument(doc.cloudinaryId)}
+                    className="text-red-600 hover:text-red-800 text-xs ml-2"
+                  >
+                    delete
+                  </button>
                 </li>
               );
             })}
