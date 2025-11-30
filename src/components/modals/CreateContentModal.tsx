@@ -32,6 +32,7 @@ export function CreateContentModal({
     const [type, setType] = useState<ContentType | null>(null);
     const [menuOpen, setMenuOpen] = useState(false);
     const noteRef = useRef<HTMLTextAreaElement>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const [documents, setDocuments] = useState<
         { name: string; url: string; type: string; size: number; cloudinaryId: string }[]
@@ -47,6 +48,8 @@ export function CreateContentModal({
         typeOptions.find((o) => o.value === type)?.label ?? "Select type";
 
     async function addcontent() {
+        if(isSubmitting) return ;
+        setIsSubmitting(true);
         const title = (titleref.current?.value ?? "").trim();
         const link = (linkref.current?.value ?? "").trim();
         const note = (noteRef.current?.value ?? "").trim();
@@ -93,6 +96,9 @@ export function CreateContentModal({
         } catch (error) {
             console.error("Error adding content:", error);
             setTypeError("Failed to add content. Please try again.");
+        }
+        finally{
+            setIsSubmitting(false);
         }
     }
 
@@ -169,8 +175,9 @@ export function CreateContentModal({
                     <Button
                         variant="primary"
                         size="md"
-                        text="submit"
+                        text={isSubmitting ? "Submitting..." : "submit"}
                         onClick={addcontent}
+                        disabled={isSubmitting}
                     ></Button>
                 </div>
                 {typeError && (
