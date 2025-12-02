@@ -31,8 +31,10 @@ export function ViewContentModal({
     // Reset html (will be regenerated in edit mode or derived for view)
     setHtml("");
   }, [_id, richNoteDelta]);
+
   const [saving, setSaving] = useState(false);
   const [lightboxImg, setLightboxImg] = useState<string | null>(null);
+  const [docToDelete, setDocToDelete] = useState<string | null>(null);
 
   // Helper to convert delta -> HTML (for view mode) without storing richNote on backend
   const deltaToHtml = useCallback((d: any): string => {
