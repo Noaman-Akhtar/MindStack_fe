@@ -15,7 +15,7 @@ export function NavBar(){
     return(
         <div className="border-b border-gray-700/50 shadow-sm sticky top-0 z-50">
             <nav className="bg-[#07070f] text-[#bbbbbb] flex justify-between items-center ">
-                <div className="flex items-center gap-3 pl-15 p-2 cursor-pointer  " onClick={scrollToTop}>
+                <div className="flex items-center gap-3 pl-15 p-2 xl:p-0 cursor-pointer  " onClick={scrollToTop}>
                     <div>
                         <Logo/> 
                     </div>

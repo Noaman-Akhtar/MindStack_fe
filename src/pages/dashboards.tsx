@@ -138,7 +138,10 @@ function Dashboard() {
   const visibleCards = cards.filter((c) =>
     filter === "all" ? true : c.type === filter
   );
-  const listToRender = searchMode ? searchResults : visibleCards;
+   const filteredSearchResults = searchMode
+    ? searchResults.filter((c) => (filter === "all" ? true : c.type === filter))
+    : [];
+  const listToRender = searchMode ? filteredSearchResults : visibleCards;
 
   const viewingContent = cards.find((c) => c._id === viewingId) || null;
   return (
