@@ -1,6 +1,7 @@
 import { Logo } from "../icons/MindStacklogo";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export function NavBar(){
     const navigate = useNavigate();
@@ -9,11 +10,20 @@ export function NavBar(){
     const scrollToTop = () => {
         window.scrollTo({ top:0, behavior:"smooth"});
     };
+const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
     return(
-        <div className="border-b border-gray-700/50 shadow-sm sticky top-0 z-50">
-            <nav className="bg-[#07070f] text-[#bbbbbb] flex justify-between items-center ">
-                <div className="flex items-center gap-3 pl-15 p-2 xl:p-0 cursor-pointer  " onClick={scrollToTop}>
+        <div className={`fixed top-0 left-0 right-0 z-50  transition-transform duration-300 ease-in-out ${scrolled ? "translate-y-0 border-b border-gray-700/50 shadow-sm" : "translate-y-5 border-b border-transparent"}`}>
+            <nav className="bg-[#07070f] text-[#bbbbbb] flex justify-between items-center">
+                <div className="flex items-center gap-3 ml-11 p-2 xl:p-0 cursor-pointer  " onClick={scrollToTop}>
                     <div>
                         <Logo/> 
                     </div>
