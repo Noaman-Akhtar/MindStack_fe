@@ -64,113 +64,73 @@ export function LandingPage(){
           ))}
         </div>
       </div>
-      <div className="text-[#cdcdcd] flex justify-between gap-8  ml-8 sm:ml-12 md:ml-12 lg:ml-22  mt-14">
+      {/* <div className="text-[#cdcdcd] flex justify-between gap-8  ml-8 sm:ml-12 md:ml-12 lg:ml-22  mt-14">
         <div>
            <p className="md:text-2xl  text-xl lg:text-3xl text-[#cdcdcd] 2xl:text-5xl font-medium">Cloud Sync</p>
-        <p className="mt-3 text-md  text-[#cdcdcd]  sm:text-xl  lg:text-lg  2xl:text-2xl font-normal sm:mt-4 md:mt-6  2xl:mt-8">
+        <p className="mt-3 text-md  text-gray-400  sm:text-xl  lg:text-lg  2xl:text-2xl font-normal sm:mt-4 md:mt-6  2xl:mt-8">
           Access your knowledge base from anywhere. MindStack syncs your data securely across all devices, so your second brain is always with you.
         </p>
         </div>
          <div className="hidden md:block w-1 bg-gray-400/30 h-28  self-center" />
         <div>
            <p className="md:text-2xl  text-xl lg:text-3xl text-[#cdcdcd]  2xl:text-5xl font-medium">Privacy First</p>
-        <p className="mt-3 text-md  text-[#cdcdcd] sm:text-xl mr-6 lg:text-lg 2xl:text-2xl  font-normal sm:mt-4 md:mt-6  2xl:mt-8">
+        <p className="mt-3 text-md  text-gray-400 sm:text-xl mr-6 lg:text-lg 2xl:text-2xl  font-normal sm:mt-4 md:mt-6  2xl:mt-8">
           Your data is yours alone. We prioritize your privacy with end-to-end encryption and zero-knowledge architecture, ensuring only you can access your information.
         </p>
         </div>
        
-      </div>
-      {/* Use Cases Section */}
-<div className="mx-8 sm:mx-12 md:mx-16 lg:mx-20 pb-16 mt-20">
-  <div className="text-center mb-12">
-    <h2 className="text-4xl md:text-5xl 2xl:text-7xl font-bold text-[#cdcdcd] mb-4">
-      Your Second Brain for Everything
+      </div> */}
+ {/* Use Cases Section */}
+<div className="mx-8 sm:mx-12 md:mx-16 lg:mx-20 pb-12 mt-16">
+  <div className="text-center mb-8">
+    <h2 className="text-3xl md:text-4xl 2xl:text-5xl font-bold text-[#cdcdcd] mb-3">
+      Built for the Way You Work
     </h2>
-    <p className="text-xl text-gray-400 max-w-3xl 2xl:text-3xl mx-auto">
+    <p className="text-base text-gray-400 max-w-2xl 2xl:text-xl mx-auto">
       Whether you're learning, creating, or organizing—MindStack adapts to your workflow.
     </p>
   </div>
 
-  {/* Use Case 1 */}
-  <div className="mb-12">
-    <h3 className="text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-semibold text-[#cdcdcd] mb-4">
-      📚 Learning & Research
-    </h3>
-    <p className="text-lg md:text-xl lg:text-2xl 2xl:text-3xl text-gray-400 leading-relaxed">
-      Save articles, research papers, and video lectures. Take notes with rich formatting. 
-      Search across everything when you need to recall something. Perfect for students, researchers, 
-      and lifelong learners building their knowledge base.
-    </p>
-  </div>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mt-16  ml-6 sm:ml-8 md:ml-12 lg:ml-15 ">
+    {/* Use Case 1 */}
+    <div>
+      <h3 className="text-lg md:text-xl 2xl:text-2xl font-semibold text-[#cdcdcd] mb-2">
+         Learning & Research
+      </h3>
+      <p className="text-sm md:text-lg 2xl:text-lg text-gray-400">
+        Save articles, papers, and lectures. Perfect for students and researchers building their knowledge base.
+      </p>
+    </div>
 
-  <div className="w-full h-px bg-gray-400/30 mb-12" />
+    {/* Use Case 2 */}
+    <div>
+      <h3 className="text-lg md:text-xl 2xl:text-2xl font-semibold text-[#cdcdcd] mb-2">
+         Developer's Hub
+      </h3>
+      <p className="text-sm md:text-lg  2xl:text-lg text-gray-400">
+        Store code snippets, docs, and tutorials. Your personal programming reference library.
+      </p>
+    </div>
 
-  {/* Use Case 2 */}
-  <div className="mb-12">
-    <h3 className="text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-semibold text-[#cdcdcd] mb-4">
-      💻 Developer's Knowledge Hub
-    </h3>
-    <p className="text-lg md:text-xl lg:text-2xl 2xl:text-3xl text-gray-400 leading-relaxed">
-      Store code snippets, documentation links, and Stack Overflow solutions. Save tutorial videos 
-      and technical articles. Search "React hooks best practices" and instantly find every resource 
-      you've saved. Your personal programming reference library.
-    </p>
-  </div>
+    {/* Use Case 3 */}
+    <div>
+      <h3 className="text-lg md:text-xl 2xl:text-2xl font-semibold text-[#cdcdcd] mb-2">
+         Content Creation
+      </h3>
+      <p className="text-sm md:text-lg 2xl:text-lg text-gray-400">
+        Collect inspiration, quotes, and references. Build your swipe file and never lose ideas.
+      </p>
+    </div>
 
-  <div className="w-full h-px bg-gray-400/30 mb-12" />
-
-  {/* Use Case 3 */}
-  <div className="mb-12">
-    <h3 className="text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-semibold text-[#cdcdcd] mb-4">
-      ✍️ Content Creation & Writing
-    </h3>
-    <p className="text-lg md:text-xl lg:text-2xl 2xl:text-3xl text-gray-400 leading-relaxed">
-      Collect inspiration, quotes, and references in one place. Save tweets, articles, and videos 
-      that spark ideas. Build your swipe file and never lose that perfect reference again. Ideal 
-      for writers, bloggers, and content creators.
-    </p>
-  </div>
-
-  <div className="w-full h-px bg-gray-400/30 mb-12" />
-
-  {/* Use Case 4 */}
-  <div className="mb-12">
-    <h3 className="text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-semibold text-[#cdcdcd] mb-4">
-      📓 Personal Knowledge Management
-    </h3>
-    <p className="text-lg md:text-xl lg:text-2xl 2xl:text-3xl text-gray-400 leading-relaxed">
-      Journal your thoughts, save interesting ideas, and organize personal notes. Keep track of 
-      goals, habits, and reflections. Build a second brain that grows with you. Perfect for 
-      journaling, self-improvement, and personal organization.
-    </p>
-  </div>
-
-  <div className="w-full h-px bg-gray-400/30 mb-12" />
-
-  {/* Use Case 5 */}
-  <div className="mb-12">
-    <h3 className="text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-semibold text-[#cdcdcd] mb-4">
-      🎯 Project & Work Management
-    </h3>
-    <p className="text-lg md:text-xl lg:text-2xl 2xl:text-3xl text-gray-400 leading-relaxed">
-      Organize meeting notes, project documentation, and work resources. Save important emails as 
-      notes, attach project files, and keep everything searchable. Find that crucial piece of 
-      information from months ago in seconds. Your work knowledge base that actually works.
-    </p>
-  </div>
-
-  <div className="w-full h-px bg-gray-400/30 mb-12" />
-
-  {/* Use Case 6 */}
-  <div className="mb-12">
-    <h3 className="text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-semibold text-[#cdcdcd] mb-4">
-      🌟 Passion Projects & Hobbies
-    </h3>
-    <p className="text-lg md:text-xl lg:text-2xl 2xl:text-3xl text-gray-400 leading-relaxed">
-      Save recipes, workout routines, travel inspiration, and DIY tutorials. Organize hobby-related 
-      content, from cooking videos to gardening tips. Keep all your interests in one searchable place. 
-      Your personal collection of everything you love.
-    </p>
+    {/* Use Case 4 */}
+    <div>
+      <h3 className="text-lg md:text-xl 2xl:text-2xl font-semibold text-[#cdcdcd] mb-2">
+         Personal Organization
+      </h3>
+      <p className="text-sm md:text-lg 2xl:text-lg text-gray-400">
+        Journal thoughts, manage projects, and organize hobbies. Everything searchable in one place.
+      </p>
+    </div>
   </div>
 </div>
       
