@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import Editor from "./Editor";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
@@ -39,8 +39,9 @@ export const RichTextEditor = ({
     const html = quillRef.current.root.innerHTML;
     onHtmlChange?.(html);
     onDeltaChange?.(quillRef.current.getContents());
-    
-  }, []);
+
+    // Re-run when contentKey or provided initial content changes so the editor stays in sync
+  }, [contentKey, initialDelta, initialHtml]);
 
     
     function emitChange() {

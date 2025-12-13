@@ -34,7 +34,7 @@ export function ViewContentModal({
 
   const [saving, setSaving] = useState(false);
   const [lightboxImg, setLightboxImg] = useState<string | null>(null);
-  const [docToDelete, setDocToDelete] = useState<string | null>(null);
+  // docToDelete state removed because deletion is handled directly via deleteDocument
 
   // Helper to convert delta -> HTML (for view mode) without storing richNote on backend
   const deltaToHtml = useCallback((d: any): string => {

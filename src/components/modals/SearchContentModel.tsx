@@ -4,11 +4,6 @@ import { useRef, useState } from "react";
 import { BACKEND_URL } from "../../config";
 import axios from "axios";
 
-interface SearchResult {
-  _id: string;
-  score: number;
-}
-
 interface SearchContentModelProps {
   open: boolean;
   onClose: () => void;

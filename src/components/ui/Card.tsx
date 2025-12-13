@@ -3,14 +3,14 @@ import { Trash } from "lucide-react";
 import { TwitterIcon } from "../icons/twitter";
 import { YoutubeIcon } from "../icons/youtube";
 import { Notes } from "../icons/notes";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import {
     getYouTubeId,
     getYouTubeEmbedUrl,
     normalizeTwitterUrl,
 } from "../../utils/embed";
 
-import { normalizeModuleId } from "vite/module-runner";
+// import { normalizeModuleId } from "vite/module-runner"; (removed unused)
 import { DocumentIcon } from "../icons/document";
 
 interface CardProps {
@@ -36,8 +36,6 @@ export function Card({
     onDelete,
     note,
     onView,
-    richNote,
-    richNoteDelta,
     searchScore,
 }: CardProps) {
     useEffect(() => {

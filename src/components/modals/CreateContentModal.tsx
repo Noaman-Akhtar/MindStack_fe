@@ -29,8 +29,7 @@ export function CreateContentModal({
     const [richNoteDelta, setRichNoteDelta] = useState<any>(null);
     const titleref = useRef<HTMLInputElement>(null);
     const linkref = useRef<HTMLInputElement>(null);
-    const [type, setType] = useState<ContentType | null>(null);
-    const [menuOpen, setMenuOpen] = useState(false);
+    const [, setType] = useState<ContentType | null>(null);
     const noteRef = useRef<HTMLTextAreaElement>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -39,13 +38,7 @@ export function CreateContentModal({
     >([]);
 
     const [typeError, setTypeError] = useState<string | null>(null);
-    const typeOptions: { label: string; value: ContentType }[] = [
-        { label: "YouTube", value: ContentType.Youtube },
-        { label: "Twitter", value: ContentType.Twitter },
-        { label: "Random", value: ContentType.Random },
-    ];
-    const currentLabel =
-        typeOptions.find((o) => o.value === type)?.label ?? "Select type";
+    // type selection UI is disabled for now; setType is still used during submit
 
     async function addcontent() {
         if(isSubmitting) return ;

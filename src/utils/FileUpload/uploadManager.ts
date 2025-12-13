@@ -1,6 +1,6 @@
 // src/utils/uploadManager.ts
 import { uploadToCloudinaryWithProgress } from './cloudinaryUpload';
-import type { UploadProgressItem,CloudinaryUploadResult } from './cloudinaryUpload';
+import type { UploadProgressItem } from './cloudinaryUpload';
 
 
 export function uploadManyWithProgress(

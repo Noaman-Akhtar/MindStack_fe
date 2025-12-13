@@ -1,4 +1,4 @@
-import { useState, type Component, type ComponentType, type ReactElement, type ReactNode } from "react";
+import type { ReactElement } from "react";
 
 export function SidebarItem({text,icon}:{
     text:string;

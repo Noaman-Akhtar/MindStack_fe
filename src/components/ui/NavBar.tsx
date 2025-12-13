@@ -1,6 +1,4 @@
-import { Signin } from "../../pages/signin";
-import { Logo } from "../icons/MindStacklogo" 
-import { Button } from "./Button"
+import { Logo } from "../icons/MindStacklogo";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -24,10 +22,10 @@ export function NavBar(){
                 </div>
                 {/* desktop */}
                 <div className="hidden md:flex gap-8 pr-5 text-lg font-medium cursor-pointer">
-                    <p>Features</p>
-                    <p onClick={() => navigate("/signin")}>Sign In</p>
+                    <p className="hover:text-[#f1f1f1]">Features</p>
+                    <p className="hover:text-[#f1f1f1]" onClick={() => navigate("/signin")}>Sign In</p>
                     <span onClick={()=>navigate("/signup")}>
-                        Sign Up
+                        <p className="hover:text-[#f1f1f1]">Sign Up</p>
                     </span>
                    
                 </div>

@@ -10,7 +10,7 @@ import { Overlay } from "../components/ui/Overlay";
 import { CreateContentModal } from "../components/modals/CreateContentModal";
 import { ViewContentModal } from "../components/modals/viewModal";
 import { SearchContentModel } from "../components/modals/SearchContentModel";
-import { assets } from "../assets/assets";
+
 
 type Filter = "all" | "twitter" | "youtube" | "random";
 
