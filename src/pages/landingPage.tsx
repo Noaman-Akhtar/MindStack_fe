@@ -152,6 +152,11 @@ export function LandingPage() {
         </section>
 
       </main>
+      <section className="py-24 text-center border-t border-gray-800/50">
+      <h2 className="text-3xl md:text-4xl font-bold text-[#cdcdcd] mb-6">
+        Ready to build your second brain?
+      </h2>
+      </section>
       {/* FOOTER */}
  <a href="https://github.com/yourname">
   <IoLogoGithub  className="w-6 h-6 text-gray-400 hover:text-[#cbaefd] transition-colors" />
