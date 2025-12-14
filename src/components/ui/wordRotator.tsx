@@ -9,7 +9,7 @@ interface WordRotatorProps {
 }
 
 
-export const WordRotator:React.FC<WordRotatorProps> = ({words,interval=2500,className="text-4xl md:text-6xl font-bold text-[#cbaefd]",wrapperClassName="flex items-center justify-center h-16 overflow-hidden"}) => {
+export const WordRotator:React.FC<WordRotatorProps> = ({words,interval=2500,className="text-4xl md:text-6xl font-bold text-[#cbaefd]",wrapperClassName="flex items-center justify-center h-20 overflow-hidden"}) => {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export const WordRotator:React.FC<WordRotatorProps> = ({words,interval=2500,clas
             animate={{ y: 0, opacity: 1 }}  // Move to center and visible
             exit={{ y: -20, opacity: 0 }}   // Move up and fade out
             transition={{ duration: 0.5, ease: "easeInOut" }}
-            className="text-4xl md:text-6xl font-bold text-[#cbaefd] inline-block"
+            className={className}
           >
             {words[index]}.
           </motion.span>
