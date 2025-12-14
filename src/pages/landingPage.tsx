@@ -2,6 +2,10 @@ import { NavBar } from "../components/ui/NavBar";
 import { useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { FeatureCard } from "../components/ui/FeatureCard";
+import { IoLogoGithub } from "react-icons/io";
+import { FaLinkedin } from "react-icons/fa";
+import { BsDiscord } from "react-icons/bs";
+
 
 export function LandingPage() {
   const navigate = useNavigate();
@@ -148,6 +152,18 @@ export function LandingPage() {
         </section>
 
       </main>
+      {/* FOOTER */}
+ <a href="https://github.com/yourname">
+  <IoLogoGithub  className="w-6 h-6 text-gray-400 hover:text-[#cbaefd] transition-colors" />
+</a>
+<a href="https://www.linkedin.com/in/yourname">
+<FaLinkedin  className="w-6 h-6 text-gray-400 hover:text-[#cbaefd] transition-colors" />
+</a>
+<a href="https://discord.com/invite/yourserver">
+<BsDiscord className="w-6 h-6 text-gray-400 hover:text-[#cbaefd] transition-colors" />
+</a>
+
+
     </div>
   );
 }
