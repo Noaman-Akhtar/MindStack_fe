@@ -44,8 +44,6 @@ export function LandingPage() {
     },
   ];
 
-  
-
   return (
     <div className="min-h-screen w-full bg-[#07070f] text-[#e8e8e8] overflow-x-hidden">
       <NavBar />
