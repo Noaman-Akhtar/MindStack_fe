@@ -85,7 +85,7 @@ export function SearchContentModel({
         <textarea
           ref={queryRef}
           placeholder="Search for anything... (e.g., 'react hooks tutorial')"
-          className="w-full p-2 rounded-md text-md placeholder:italic placeholder-[#d5d4eb] outline-none border-[1.3px] bg-[#0F0F1A] text-[#d5d4eb] border-gray-400 focus:border-gray-600/60"
+          className="w-full p-2 rounded-md text-md placeholder:italic placeholder-[#d5d4eb] outline-none border-[1.5px] bg-[#0F0F1A] text-[#d5d4eb] border-gray-400 focus:border-gray-600/60"
           rows={3}
           onKeyDown={handleKeyDown}
         />
