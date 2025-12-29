@@ -19,13 +19,22 @@ export function Signin() {
     async function signin() {
         const username = usernameRef.current?.value.trim();
         const password = passwordRef.current?.value;
-        const response = await axios.post(BACKEND_URL + "/api/v1/signin", {
+        try{
+             const response = await axios.post(BACKEND_URL + "/api/v1/signin", {
             username,
             password
         });
         const jwt = response.data.token;
         localStorage.setItem("token", jwt);
         navigate("/dashboard");
+        }
+        catch (err: any) {
+            if (err.response && err.response.status === 403) {
+                ("Invalid username or password");
+            } else {
+                alert("Signin failed. Please try again.");
+            }
+        }
     }
     return (
         <div className=" signup-bg h-screen w-screen bg-black flex justify-center items-center">

@@ -1,5 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { ContentModel, UserModel, LinkModel } from "./db";
 import cors from "cors";
@@ -12,9 +13,8 @@ import { upsertToPinecone, deleteFromPinecone, searchInPinecone } from './utils/
 import { buildEmbeddingText } from "./utils/textExtractor";
 import { Pinecone } from "@pinecone-database/pinecone";
 
-const MAX_JSON_SIZE = process.env.MAX_JSON_SIZE || "1mb";
-app.use(express.json({ limit: MAX_JSON_SIZE }));
-app.use(express.urlencoded({ extended: true, limit: MAX_JSON_SIZE }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true}));
 app.use(cors());
 
 // declare module 'express' {
@@ -22,35 +22,43 @@ app.use(cors());
 //     userId?: string;
 //   }
 // }
-
+const saltRounds=10;
 app.use('/api/v1/cloudinary', cloudinaryRouter);
-
 app.post("/api/v1/signup", async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
+
     try {
+        const existingUser = await UserModel.findOne({ name: username });
+        if (existingUser) {
+            res.status(409).json({ message: "Username already taken" });
+            return;
+        }
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
         await UserModel.create({
             name: username,
-            password: password,
+            password: hashedPassword,
         });
-        res.json({
-            message: "User created successfully",
-        });
-    } catch (error) {
-        res.status(411).json({ message: "user already exists" });
+        res.json({ message: "User created successfully" });
+    } catch (error:any) {
+        if (error.code === 11000) {
+            res.status(409).json({ message: "Username already taken" });
+        } else {
+            res.status(500).json({ message: "Error creating user" });
+        }
     }
 });
-
 app.post("/api/v1/signin", async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
     const existingUser = await UserModel.findOne({
-        name: username,
-        password,
+        name: username
     });
     if (existingUser) {
-        const token = jwt.sign(
+        const passwordMatch = await bcrypt.compare(password,existingUser.password);
+        if(passwordMatch){
+            const token = jwt.sign(
             {
                 id: existingUser._id,
             },
@@ -60,9 +68,13 @@ app.post("/api/v1/signin", async (req, res) => {
         res.json({
             token,
         });
+        return;
+        }
+         res.status(403).json({ message: "Incorrect credentials" });
+        return;
     } else {
         res.status(403).json({
-            message: "Incorrrect credentials",
+            message: "Incorrect credentials",
         });
     }
 });

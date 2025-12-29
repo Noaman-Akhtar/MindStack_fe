@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import axios from "axios";
@@ -10,6 +10,7 @@ export function Signup() {
     const navigate = useNavigate();
     const usernameRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
+    const [error, setError] = useState("");
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
@@ -17,14 +18,22 @@ export function Signup() {
         }
     }, [])
     async function signup() {
+        setError("");
         const username = usernameRef.current?.value.trim();
         const password = passwordRef.current?.value;
-        await axios.post(BACKEND_URL + "/api/v1/signup", {
-            username,
-            password
-        });
-        alert("you have signed up!");
-        navigate("/signin");
+        try {
+            await axios.post(BACKEND_URL + "/api/v1/signup", {
+                username,
+                password
+            });
+            navigate("/signin");
+        } catch (err: any) {
+            if (err.response && err.response.status === 409) {
+                setError("Username already exists");
+            } else {
+                setError("Signup failed. Please try again.");
+            }
+        }
     }
     return (
         <div className=" signup-bg h-screen w-screen bg-black flex justify-center items-center">
@@ -36,8 +45,10 @@ export function Signup() {
                 </div>
                 <div className="flex justify-center items-center mt-15">
                     <Button variant="primary" text="Signup" size="full" onClick={signup} loading={false} />
-
                 </div>
+                {error && (
+                    <div className="text-red-500 text-center mt-4">{error}</div>
+                )}
             </div>
         </div>
     );
