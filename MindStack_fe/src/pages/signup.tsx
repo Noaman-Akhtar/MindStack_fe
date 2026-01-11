@@ -5,68 +5,131 @@ import axios from "axios";
 import { BACKEND_URL } from "../config";
 import { useNavigate } from "react-router-dom";
 
-
 export function Signup() {
-    const navigate = useNavigate();
-    const usernameRef = useRef<HTMLInputElement>(null);
-    const passwordRef = useRef<HTMLInputElement>(null);
-    const [error, setError] = useState<string[]>([]);
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (token) {
-            navigate("/dashboard")
-        }
-    }, [])
-    async function signup() {
-        setError([]);
-        const username = usernameRef.current?.value.trim();
-        const password = passwordRef.current?.value;
-        try {
-            await axios.post(BACKEND_URL + "/api/v1/signup", {
-                username,
-                password
-            });
-            navigate("/signin");
-        } catch (err: any) {
-            if (err.response && err.response.data) {
-
-                 // Handle validation errors from backend
-                if (err.response.data.errors && Array.isArray(err.response.data.errors)) {
-                    setError(err.response.data.errors);
-                } else if (err.response.status === 409) {
-                    setError(["Username already exists"]);
-                } else {
-                    setError([err.response.data.message || "Signup failed. Please try again."]);
-                }
-            } else {
-                setError(["Signup failed. Please try again."]);
-            }
-        }
+  const navigate = useNavigate();
+  const usernameRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const [error, setError] = useState<string[]>([]);
+  const [fieldErrors, setFieldErrors] = useState<{
+    username?: string;
+    password?: string;
+  }>({});
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/dashboard");
     }
-    return (
-        <div className=" signup-bg h-screen w-screen bg-black flex justify-center items-center">
-            <div className="blur-ellipse"></div>
-            <div className="fixed max-w-96 h-80 m-2 w-full border border-gray-300/20 shadow-md bg-[#303060]/20 rounded-lg p-6 ">
-                <div className="flex flex-col  mt-8 gap-y-6">
-                    <Input variant="secondary" ref={usernameRef} placeholder="UserName" type="text" />
-                    <Input variant="secondary" ref={passwordRef} placeholder="Password" type="password" />
-                </div>
-                <div className="flex justify-center items-center mt-15">
-                    <Button variant="primary" text="Signup" size="full" onClick={signup} loading={false} />
-                </div>
-                 {error.length > 0 && (
-                    <div className="bg-red-500/20 border border-red-500/50 rounded-md p-3 mt-4">
-                        <ul className="text-red-400 text-sm space-y-1">
-                            {error.map((err, index) => (
-                                <li key={index} className="flex items-start">
-                                    <span className="mr-2">*</span>
-                                    <span>{err}</span>
-                                </li>
-                            ))} 
-                        </ul>
-                    </div>
-                )}
+  }, []);
+  async function signup() {
+    setError([]);
+    const username = usernameRef.current?.value.trim();
+    const password = passwordRef.current?.value;
+
+    const nextFieldErrors: { username?: string; password?: string } = {};
+    if (!username) nextFieldErrors.username = "Username is required";
+    if (!password) nextFieldErrors.password = "Password is required";
+    if (Object.keys(nextFieldErrors).length > 0) {
+      setFieldErrors(nextFieldErrors);
+      return;
+    }
+
+    try {
+      await axios.post(BACKEND_URL + "/api/v1/signup", {
+        username,
+        password,
+      });
+      navigate("/signin");
+    } catch (err: any) {
+      if (err.response && err.response.data) {
+        // Handle validation errors from backend
+        if (
+          err.response.data.errors &&
+          Array.isArray(err.response.data.errors)
+        ) {
+          setError(err.response.data.errors);
+        } else if (err.response.status === 409) {
+          setError(["Username already exists"]);
+        } else {
+          setError([
+            err.response.data.message || "Signup failed. Please try again.",
+          ]);
+        }
+      } else {
+        setError(["Signup failed. Please try again."]);
+      }
+    }
+  }
+  return (
+    <div className=" signup-bg h-screen w-screen bg-black flex justify-center items-center">
+      <div className="blur-ellipse"></div>
+      <div className="fixed max-w-82 m-2 w-full border border-gray-300/20 shadow-md bg-[#303060]/20 rounded-lg p-6 ">
+        <div className="flex flex-col  mt-6 gap-y-10">
+          <div>
+            <Input
+            variant="secondary"
+            ref={usernameRef}
+            placeholder="UserName"
+            type="text"
+            onChange={() => {
+              setError([]);
+              setFieldErrors((prev) => ({ ...prev, username: undefined }));
+            }}
+          />
+          {fieldErrors.username && (
+            <div className="mt-1 text-xs text-red-400">
+              {fieldErrors.username}
             </div>
+          )}
+          </div>
+          <div>
+          <Input
+            variant="secondary"
+            ref={passwordRef}
+            placeholder="Password"
+            type="password"
+            onChange={() => {
+              setError([]);
+              setFieldErrors((prev) => ({ ...prev, password: undefined }));
+            }}
+          />
+          {fieldErrors.password && (
+            <div className="mt-1 text-xs text-red-400">
+              {fieldErrors.password}
+            </div>
+          )}
+          </div>
         </div>
-    );
+        <div className="flex justify-center items-center mt-15">
+          <Button
+            variant="primary"
+            text="Signup"
+            size="full"
+            onClick={signup}
+            loading={false}
+          />
+        </div>
+        <div className="mt-2 flex justify-center items-center text-gray-400">
+          Already have an account?{" "}
+          <span
+            className="text-blue-500 cursor-pointer ml-2"
+            onClick={() => navigate("/signin")}
+          >
+            Signin
+          </span>
+        </div>
+        {error.length > 0 && (
+          <div className="bg-red-500/20 border border-red-500/50 rounded-md p-3 mt-4">
+            <ul className="text-red-400 text-sm space-y-1">
+              {error.map((err, index) => (
+                <li key={index} className="flex items-start">
+                  <span className="mr-2">*</span>
+                  <span>{err}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }

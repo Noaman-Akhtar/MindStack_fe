@@ -17,6 +17,7 @@ export function Input(props: InputProps) {
             ref={props.ref}
                 placeholder={props.placeholder} 
                 type={props.type} 
+                onChange={props.onChange}
                 className={"w-full tracking-wider outline-none border-[1.3px] border-gray-300 focus:border-voilet-900/60 rounded h-10 pl-3 py-1 text-l placeholder:italic transition-colors duration-200"+" "+variantStyles[props.variant]}
 style={props.height?{height:props.height}:undefined}
             />
