@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect,useState, useRef } from "react";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import axios from "axios";
@@ -10,6 +10,7 @@ export function Signin() {
     const navigate = useNavigate();
     const usernameRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
+    const [error, setError] = useState<string>("");
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
@@ -29,11 +30,7 @@ export function Signin() {
         navigate("/dashboard");
         }
         catch (err: any) {
-            if (err.response && err.response.status === 403) {
-                ("Invalid username or password");
-            } else {
-                alert("Signin failed. Please try again.");
-            }
+                setError("Incorrect credentials");  
         }
     }
     return (
@@ -47,6 +44,13 @@ export function Signin() {
                 <div className="flex justify-center items-center mt-25">
                     <Button variant="primary" text="Signin" size="full" onClick={signin} loading={false} />
                 </div>
+                {error.length > 0 && (
+                    <div className="bg-red-500/20 border border-red-500/50 rounded-md p-3 mt-4">
+                        <div className="text-red-400 text-sm space-y-1">
+                            {error}
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

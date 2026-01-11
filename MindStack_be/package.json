@@ -26,7 +26,8 @@
     "lodash": "^4.17.21",
     "mongoose": "^8.12.1",
     "multer": "^2.0.2",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "zod": "^4.3.5"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

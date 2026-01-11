@@ -10,7 +10,7 @@ export function Signup() {
     const navigate = useNavigate();
     const usernameRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
-    const [error, setError] = useState("");
+    const [error, setError] = useState<string[]>([]);
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
@@ -18,7 +18,7 @@ export function Signup() {
         }
     }, [])
     async function signup() {
-        setError("");
+        setError([]);
         const username = usernameRef.current?.value.trim();
         const password = passwordRef.current?.value;
         try {
@@ -28,10 +28,18 @@ export function Signup() {
             });
             navigate("/signin");
         } catch (err: any) {
-            if (err.response && err.response.status === 409) {
-                setError("Username already exists");
+            if (err.response && err.response.data) {
+
+                 // Handle validation errors from backend
+                if (err.response.data.errors && Array.isArray(err.response.data.errors)) {
+                    setError(err.response.data.errors);
+                } else if (err.response.status === 409) {
+                    setError(["Username already exists"]);
+                } else {
+                    setError([err.response.data.message || "Signup failed. Please try again."]);
+                }
             } else {
-                setError("Signup failed. Please try again.");
+                setError(["Signup failed. Please try again."]);
             }
         }
     }
@@ -46,8 +54,17 @@ export function Signup() {
                 <div className="flex justify-center items-center mt-15">
                     <Button variant="primary" text="Signup" size="full" onClick={signup} loading={false} />
                 </div>
-                {error && (
-                    <div className="text-red-500 text-center mt-4">{error}</div>
+                 {error.length > 0 && (
+                    <div className="bg-red-500/20 border border-red-500/50 rounded-md p-3 mt-4">
+                        <ul className="text-red-400 text-sm space-y-1">
+                            {error.map((err, index) => (
+                                <li key={index} className="flex items-start">
+                                    <span className="mr-2">*</span>
+                                    <span>{err}</span>
+                                </li>
+                            ))} 
+                        </ul>
+                    </div>
                 )}
             </div>
         </div>

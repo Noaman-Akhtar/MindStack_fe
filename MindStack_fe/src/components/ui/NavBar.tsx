@@ -24,7 +24,7 @@ export function NavBar() {
     <div
       className={`fixed top-0 left-0 right-0 z-50 transition-transform duration-200 ease-in-out ${
         scrolled
-          ? "translate-y-0 border-b border-gray-700/50 shadow-sm bg-[#07070f]/95 backdrop-blur-sm"
+          ? "translate-y5-0 border-b border-gray-700/50 shadow-sm bg-[#07070f]/95 backdrop-blur-sm"
           : "translate-y-4 border-b border-transparent "
       }`}
     >
