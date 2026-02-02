@@ -102,6 +102,7 @@ app.post("/api/v1/signin", async (req, res) => {
 app.post("/api/v1/content", middleware, async (req, res) => {
     const { link, type, note, title, richNoteDelta } = req.body;
     const documents = req.body.documents;
+    const userId = req.userId as string;
     // Runtime diagnostics to help debug incorrect payload shape
     // console.log("[CREATE_CONTENT] userId=", req.userId, "documents typeof=", typeof documents, Array.isArray(documents) ? `array(length=${documents.length})` : 'not-array');
     try {
@@ -112,7 +113,7 @@ app.post("/api/v1/content", middleware, async (req, res) => {
             title,
             richNoteDelta,
             documents: Array.isArray(documents) ? documents : (documents ? [documents] : []),
-            userId: req.userId,
+            userId: userId,
             tags: [],
         });
 
@@ -124,7 +125,7 @@ app.post("/api/v1/content", middleware, async (req, res) => {
         });
 
         await upsertToPinecone({
-            userId: req.userId!,
+            userId: userId,
             contentId: doc._id.toString(),
             embeddingText: embeddingText,
             metadata: {
@@ -154,11 +155,12 @@ app.get("/api/v1/content", middleware, async (req, res) => {
 
 app.delete("/api/v1/content/:id", middleware, async (req, res) => {
     const contentId = req.params.id;
+    const userId = req.userId as string;
     await ContentModel.deleteOne({
         _id: contentId,
-        userId: req.userId,
+        userId: userId,
     });
-    deleteFromPinecone(req.userId!,contentId).catch(err =>{
+    deleteFromPinecone(userId, contentId).catch(err =>{
         console.error('Failed to delete from Pinecone',err);
     });
 
@@ -192,7 +194,7 @@ app.put("/api/v1/content/:id", middleware, async (req, res) => {
     });
 
     await upsertToPinecone({
-        userId: req.userId!,
+        userId: req.userId as string,
         contentId: doc._id.toString(),
         embeddingText: embeddingText,
         metadata: {
@@ -210,7 +212,7 @@ app.post("/api/v1/search",middleware,async(req,res)=>{
      return;
     }
     try{
-        const pineconeResults = await searchInPinecone(req.userId!,query);
+        const pineconeResults = await searchInPinecone(req.userId as string, query);
         console.log(`Found ${pineconeResults.length} Pinecone results`);
 
         if(pineconeResults.length === 0){
