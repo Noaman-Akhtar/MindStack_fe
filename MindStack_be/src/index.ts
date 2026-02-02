@@ -154,7 +154,7 @@ app.get("/api/v1/content", middleware, async (req, res) => {
 });
 
 app.delete("/api/v1/content/:id", middleware, async (req, res) => {
-    const contentId = req.params.id;
+    const contentId = String(req.params.id);
     const userId = req.userId as string;
     await ContentModel.deleteOne({
         _id: contentId,
@@ -168,7 +168,7 @@ app.delete("/api/v1/content/:id", middleware, async (req, res) => {
 });
 
 app.put("/api/v1/content/:id", middleware, async (req, res) => {
-    const contentId = req.params.id;
+    const contentId = String(req.params.id);
     const { title, link, type, note, richNoteDelta, documents } = req.body;
     const doc = await ContentModel.findOne({
         _id: contentId,
