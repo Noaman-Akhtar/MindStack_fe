@@ -1,13 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { JWT_PASSWORD } from "../config";
-declare global {
-  namespace Express {
-    interface Request {
-      userId?: string;
-    }
-  }
-}
+
 export const middleware = (req: Request, res: Response, next: NextFunction): void => {
     const token = req.headers.authorization;
     
