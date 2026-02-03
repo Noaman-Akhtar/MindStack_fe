@@ -33,6 +33,9 @@ export async function uploadToCloudinaryWithProgress(
 
     const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
     const API_KEY = import.meta.env.VITE_CLOUDINARY_API_KEY;
+    if (!CLOUD_NAME) {
+  console.error('VITE_CLOUDINARY_CLOUD_NAME is missing in this build');
+}
 
     const formData = new FormData();
     formData.append('file', file);
