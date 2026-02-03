@@ -70,8 +70,8 @@ export const FeatureCard = ({ title, description, videoSrc }: FeatureCardProps) 
         <p className="text-gray-300 leading-relaxed  2xl:text-2xl max-w-md">{description}</p>
       </div>
 
-      {/* Video Container */}
-      <div className="relative aspect-video w-full overflow-hidden bg-black ml-8 mr-4 mt-auto rounded-lg">
+      {/* Video Container - hidden on mobile */}
+      <div className="hidden lg:block relative aspect-video w-full overflow-hidden bg-black ml-8 mr-4 mt-auto rounded-lg">
         <video
           ref={videoRef}
           className="h-full w-full object-cover opacity-80" 

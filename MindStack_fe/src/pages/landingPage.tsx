@@ -93,7 +93,7 @@ export function LandingPage() {
             <h2 className="text-3xl md:text-5xl font-bold text-[#cdcdcd]">
               Features & How It Works
             </h2>
-            <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto">
+            <p className="hidden lg:block text-lg md:text-xl text-gray-400 max-w-2xl mx-auto">
               Hover over each card to see them in action.
             </p>
           </div>
