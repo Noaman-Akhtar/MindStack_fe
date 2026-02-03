@@ -19,7 +19,7 @@ export interface UploadProgressItem {
 }
 
 const BACKEND_BASE =
-    (import.meta.env.VITE_BACKEND_URL as string) || 'http://localhost:3020';
+    (import.meta.env.VITE_BACKEND_URL as string);
 
 export async function uploadToCloudinaryWithProgress(
     file: File,
