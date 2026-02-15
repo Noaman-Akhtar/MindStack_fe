@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import type Delta from "quill-delta";
 import "../App.css";
 import { Button } from "../components/ui/Button";
 import { PlusIcon } from "../components/icons/plusIcon";
@@ -10,13 +11,13 @@ import { Overlay } from "../components/ui/Overlay";
 import { CreateContentModal } from "../components/modals/CreateContentModal";
 import { ViewContentModal } from "../components/modals/viewModal";
 import { SearchContentModel } from "../components/modals/SearchContentModel";
-
+import { DeleteConfirmModal } from "../components/modals/DeleteConfirmModal";
 
 type Filter = "all" | "twitter" | "youtube" | "random";
 
 type Content = {
   richNote: string | undefined;
-  richNoteDelta: any;
+  richNoteDelta: Delta | null;
   id?: string;
   _id?: string;
   title: string;
@@ -32,11 +33,7 @@ type DashboardNavProps = {
   onSearch: () => void;
 };
 
-function DashboardNav({
-  scrolled,
-  onAddContent,
-  onSearch,
-}: DashboardNavProps) {
+function DashboardNav({ scrolled, onAddContent, onSearch }: DashboardNavProps) {
   return (
     <div
       className={`fixed top-0 right-0 left-0 z-20 flex items-center justify-end gap-2 py-2 pt-4 sm:gap-5 transition-all duration-300 bg-[#0F0F1A] px-4 ${
@@ -44,9 +41,11 @@ function DashboardNav({
       }`}
     >
       <div className="flex justify-end sm:gap-5 gap-2">
-         <input placeholder="Search" className="px-2 py-2 p-1 rounded-xl border-1 border-[#C4C2FF]  sm:text-base  text-[#C4C2FF] w-28 sm:w-56 focus:outline-none" onFocus={onSearch}>
-         
-         </input>
+        <input
+          placeholder="Search"
+          className="px-2 py-2 p-1 rounded-xl border-1 border-[#C4C2FF]  sm:text-base  text-[#C4C2FF] w-28 sm:w-56 focus:outline-none"
+          onFocus={onSearch}
+        ></input>
         <Button
           variant="primary"
           size="md"
@@ -54,7 +53,6 @@ function DashboardNav({
           startIcon={<PlusIcon size="md" />}
           onClick={onAddContent}
         />
-       
       </div>
     </div>
   );
@@ -71,6 +69,10 @@ function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<Content[]>([]);
   const [scrolled, setScrolled] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -95,9 +97,17 @@ function Dashboard() {
     fetchCards();
   }, []);
 
-  const handleDelete = async (id: string) => {
+  const requestDelete = (id: string) => {
+    const card = cards.find((c) => (c._id ?? c.link) === id);
+    setPendingDelete({ id, title: card?.title ?? "" });
+  };
+
+  const confirmDelete = async () => {
+    if (!pendingDelete) return;
+    const { id } = pendingDelete;
+    setPendingDelete(null);
     const prev = cards;
-    setCards(prev.filter((c) => (c._id ?? c.link) !== id));
+    setCards(prev.filter((c) => c._id !== id));
     try {
       await axios.delete(`${BACKEND_URL}/api/v1/content/${id}`, {
         headers: { Authorization: localStorage.getItem("token") ?? "" },
@@ -111,7 +121,7 @@ function Dashboard() {
 
   const handleSearchComplete = (
     query: string,
-    results: Array<{ _id: string; score?: number }>
+    results: Array<{ _id: string; score?: number }>,
   ) => {
     setSearchMode(true);
     setSearchQuery(query);
@@ -136,9 +146,9 @@ function Dashboard() {
   };
 
   const visibleCards = cards.filter((c) =>
-    filter === "all" ? true : c.type === filter
+    filter === "all" ? true : c.type === filter,
   );
-   const filteredSearchResults = searchMode
+  const filteredSearchResults = searchMode
     ? searchResults.filter((c) => (filter === "all" ? true : c.type === filter))
     : [];
   const listToRender = searchMode ? filteredSearchResults : visibleCards;
@@ -152,14 +162,13 @@ function Dashboard() {
         onSearch={() => setSearch(true)}
       />
       {/* Sidebar */}
-    
-        <Sidebar
-          extended={extended}
-          setExtended={setExtended}
-          onSelectType={(f: Filter) => setFilter(f)}
-          active={filter}
-        />
-    
+
+      <Sidebar
+        extended={extended}
+        setExtended={setExtended}
+        onSelectType={(f: Filter) => setFilter(f)}
+        active={filter}
+      />
 
       {/* Main content  */}
       <div
@@ -202,8 +211,8 @@ function Dashboard() {
                   // Patch local state
                   setCards((prev) =>
                     prev.map((c) =>
-                      c._id === updated._id ? { ...c, ...updated } : c
-                    )
+                      c._id === updated._id ? { ...c, ...updated } : c,
+                    ),
                   );
                 }}
               />
@@ -225,7 +234,8 @@ function Dashboard() {
           </div>
         )}
         {/* cards */}
-        <div  className={`grid grid-cols-1 md:grid-cols-2 gap-10 justify-items-center py-2 ${
+        <div
+          className={`grid grid-cols-1 md:grid-cols-2 gap-10 justify-items-center py-2 ${
             extended
               ? "lg:grid-cols-2 xl:grid-cols-3"
               : "lg:grid-cols-3 xl:grid-cols-4"
@@ -241,12 +251,20 @@ function Dashboard() {
               note={card.note}
               richNote={card.richNote}
               richNoteDelta={card.richNoteDelta}
-              onDelete={handleDelete}
+              onDelete={requestDelete}
               onView={setViewingId}
-              searchScore={searchMode ? (card as any).score : undefined}
+              searchScore={searchMode ? card.score : undefined}
             />
           ))}
         </div>
+
+        {/* Delete confirmation modal */}
+        <DeleteConfirmModal
+          open={!!pendingDelete}
+          title={pendingDelete?.title}
+          onConfirm={confirmDelete}
+          onCancel={() => setPendingDelete(null)}
+        />
       </div>
     </div>
   );

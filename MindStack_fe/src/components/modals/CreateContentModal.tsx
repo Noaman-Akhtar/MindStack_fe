@@ -7,6 +7,7 @@ import { getYouTubeId, isValidTwitterUrl } from "../../utils/embed";
 import axios from "axios";
 import { RichTextEditor } from "../../utils/RichTextEditor/RichtextEditor";
 import { MultiUploader } from "../../utils/FileUpload/uploaderUi";
+import type Delta from "quill-delta";
 
 enum ContentType {
   Youtube = "youtube",
@@ -24,7 +25,7 @@ export function CreateContentModal({
   onContentAdded,
 }: CreateContentModalProps) {
   const [richNote, setRichNote] = useState("");
-  const [richNoteDelta, setRichNoteDelta] = useState<any>(null);
+  const [richNoteDelta, setRichNoteDelta] = useState<Delta | null>(null);
   const titleref = useRef<HTMLInputElement>(null);
   const linkref = useRef<HTMLInputElement>(null);
   const [, setType] = useState<ContentType | null>(null);
